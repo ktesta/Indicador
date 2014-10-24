@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <?php echo $this->headTitle('Horizons '. $this->translate('Business Telecom'))->setSeparator(' - ')->setAutoEscape(false) ?>
+
+  <?php echo $this->headMeta()
+  ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+  ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+  ?>
+
+
+  <!-- Le styles -->
+  <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/logo.png'))
+  ->prependStylesheet($this->basePath() . '/css/style.css')
+  ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css') 
+  ?>
+
+<!-- Scripts -->
+  <?php echo $this->headScript()
+  ->prependFile($this->basePath() . '/js/bootstrap.min.js')
+  ->prependFile($this->basePath() . '/js/jquery.js')
+
+  ; ?>
+ 
+
+</head>
+
+
+<body>
+
+  <!-- Form area -->
+  <div class="admin-form">
+    <div class="container">
+
+      <div class="row">
+        <div class="col-md-12">
+          <!-- Widget starts -->
+          <div class="widget worange">
+            <!-- Widget head -->
+            <div class="widget-head">
+              <img align="left" src="<?php echo $this->basePath('img/logo.png') ?>"/> 
+              <div>&nbsp <b>PORTAL DE INDICADORES</b> - Login </div>
+            </div>
+
+            <div class="widget-content">
+              <div class="padd">
+                <!-- Login form -->
+                <form class="form-horizontal">
+                  <!-- Email -->
+                  <div class="form-group">
+                    <label class="control-label col-lg-3" for="inputEmail">Login</label>
+                    <div class="col-lg-9">
+                      <input type="text" class="form-control" id="login" placeholder="Login">
+                    </div>
+                  </div>
+                  <!-- Password -->
+                  <div class="form-group">
+                    <label class="control-label col-lg-3" for="inputPassword">Senha </label>
+                    <div class="col-lg-9">
+                      <input type="password" class="form-control" id="password" placeholder="Senha">
+                    </div>
+                  </div>
+                  <!-- Remember me checkbox and sign in button -->
+                  <div class="form-group">
+                   <div class="col-lg-9 col-lg-offset-3">
+                    <div class="checkbox">
+                      <label>
+                        <input type="checkbox"> Lembrar
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-9 col-lg-offset-3">
+                 <button id="submit" type="submit" class="btn btn-info btn-sm">Entrar</button>
+                 <button type="reset" class="btn btn-default btn-sm">Limpar</button>
+               </div>
+               <br />
+             </form>
+
+           </div>
+         </div>
+
+          <div class="widget-foot">
+            <div id="ajaxLoader"></div>
+            Não consegue entrar? <a href="mailto:qep@horizonstelecom.com">Clique aqui </a>
+          </div>
+        </div>  
+      </div>
+    </div>
+  </div> 
+</div>
+
+		
+
+<!-- JS -->
+<script src="js/jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
+</body>
+</html>
+
+<script type="text/javascript">
+  
+  $(document).ready(function(){
+    $('#alert').hide();
+  });
+
+  $('#submit').click(function(event){
+    event.preventDefault();
+    ajaxLoader();
+    var login = $('#login').val();
+    var password = $('#password').val();
+
+    if( login == '' || password == ''){
+      alertError("Por favor, insira o usuário e a senha !");
+    }
+    else {
+      $.post( "auth", { 
+          login: login,
+          password: password 
+        }).done(function( data ) {
+          if(data == 1){
+            $(window.location).attr('href', '../index/index');
+          }
+          else if( data == 2 ){
+            alertError("Usuário sem permissão!");
+          }
+          else{
+            alertError("Login ou senha inválido!");
+          }
+      }); 
+    } 
+  });
+
+
+  function ajaxLoader(){
+    $('#ajaxLoader').html('<img align="center" src="<?php echo $this->basePath('img/ajax-loader.gif') ?>"> ');
+  }
+  function alertError( msgm ){
+    $('#ajaxLoader').html('<div id="alert" class="alert alert-danger" role="alert" style="font-weight: bold;"></div>'); 
+    $('#alert').text(msgm);
+  }
+
+</script>

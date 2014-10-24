@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <!-- Title and other stuffs -->
+  <title>Error - MacAdmin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <meta name="author" content="">
+
+  <!-- Stylesheets -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/font-awesome.min.css">
+  <link href="css/style.css" rel="stylesheet">
+  
+  <script src="js/respond.min.js"></script>
+  <!--[if lt IE 9]>
+  <script src="js/html5shiv.js"></script>
+  <![endif]-->
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="img/favicon/favicon.png">
+
+  <!-- Le styles -->
+  <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/logo.png'))
+  ->prependStylesheet($this->basePath() . '/css/style.css')
+  ->prependStylesheet($this->basePath() . '/css/bootstrap-theme.min.css')
+  ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css') 
+  ->prependStylesheet($this->basePath() . '/css/font-awesome.min.css')
+  ->prependStylesheet($this->basePath() . '/css/jquery-ui.css')
+  ->prependStylesheet($this->basePath() . '/css/fullcalendar.css')
+  ->prependStylesheet($this->basePath() . '/css/prettyPhoto.css')
+  ->prependStylesheet($this->basePath() . '/css/rateit.css')
+  ->prependStylesheet($this->basePath() . '/css/bootstrap-datetimepicker.min.css')
+  ->prependStylesheet($this->basePath() . '/css/jquery.cleditor.css')
+  ->prependStylesheet($this->basePath() . '/css/jquery.dataTables.css')
+  ->prependStylesheet($this->basePath() . '/css/jquery.onoff.css')
+  ->prependStylesheet($this->basePath() . '/css/style.css')
+  ->prependStylesheet($this->basePath() . '/css/widgets.css')
+
+  ?>
+
+<!-- Scripts -->
+  <?php echo $this->headScript()
+  ->prependFile($this->basePath() . '/js/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9',))
+  ->prependFile($this->basePath() . '/js/html5shiv.js',   'text/javascript', array('conditional' => 'lt IE 9',))
+  ->prependFile($this->basePath() . '/js/jquery-ui.min.js')
+  ->prependFile($this->basePath() . '/js/fullcalendar.min.js')
+  ->prependFile($this->basePath() . '/js/jquery.rateit.min.js')
+  ->prependFile($this->basePath() . '/js/jquery.prettyPhoto.js')
+  ->prependFile($this->basePath() . '/js/jquery.slimscroll.min.js')
+  ->prependFile($this->basePath() . '/js/jquery.dataTables.min.js')
+  ->prependFile($this->basePath() . '/js/jquery.flot.stack.js')
+  ->prependFile($this->basePath() . '/js/jquery.noty.js')
+  ->prependFile($this->basePath() . '/js/themes/default.js')
+  ->prependFile($this->basePath() . '/js/layouts/bottom.js')
+  ->prependFile($this->basePath() . '/js/layouts/topRight.js')
+  ->prependFile($this->basePath() . '/js/layouts/top.js')
+  ->prependFile($this->basePath() . '/js/sparklines.js')
+  ->prependFile($this->basePath() . '/js/jquery.cleditor.min.js')
+  ->prependFile($this->basePath() . '/js/bootstrap-datetimepicker.min.js')
+  ->prependFile($this->basePath() . '/js/jquery.onoff.min.js')
+  ->prependFile($this->basePath() . '/js/filter.js')
+  ->prependFile($this->basePath() . '/js/bootstrap.min.js')
+  ->prependFile($this->basePath() . '/js/exporting.js')
+  ->prependFile($this->basePath() . '/js/highcharts.js')
+  ->prependFile($this->basePath() . '/js/custom.js')
+  ->prependFile($this->basePath() . '/js/jquery.js')
+
+  ; ?>
+</head>
+
+<body>
+
+<!-- Form area -->
+<div class="error-page">
+  <div class="container">
+
+    <div class="row">
+      <div class="col-md-12">
+        <!-- Widget starts -->
+            <div class="widget">
+              <!-- Widget head -->
+              <div class="widget-head">
+                <i class="fa fa-question-circle"></i> Erro
+                <div class='pull-right'><img src="<?php echo $this->basePath('img/horizons.png') ?>"/></div>
+              </div>
+
+              <div class="widget-content">
+                <div class="padd error">
+                  
+                  <h1>Opps!!! Erro 404.</h1>
+                  <p>O caminho solicitado não pode ser encontrado. Em caso de dúvidas, abra um chamado com QEP pelo email  <a href="mailto:qep@horizonstelecom.com">qep@horizonstelecom.com </a>.</p>
+                  <br />
+
+                 <br />
+                 <div class="horizontal-links">
+                  <a href="<?php echo $this->url('crmMain', array('action' => 'index'), null, true); ?>">Home</a>
+                 </div>
+
+                </div>
+                <div class="widget-foot">
+                  <!-- Footer goes here -->
+                </div>
+              </div>
+            </div>  
+      </div>
+    </div>
+  </div> 
+</div>
+  
+    
+
+<!-- JS -->
+<script src="js/jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
+</body>
+</html>

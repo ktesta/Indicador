@@ -1,0 +1,60 @@
+<!-- Table Page -->
+<div class="page-tables ">
+  <!-- Table -->
+  <div class="table-responsive">
+    <table class="table table-striped " cellspacing="0" width="100%" id="data-table" >
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Tipo</th> 
+          <th>Título</th>
+          <th>Produto</th> 
+          <th>Fechamento</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php $row = 0;
+              foreach ($ticketList as $ticket) : 
+                $row++;
+                if ($row == 1) :
+        ?>
+                    <script>
+                      $('#myModalLabel').html('<b><?php echo $ticket['customer_name']; ?></b>'); 
+                    </script>
+        <?php   endif ?>
+
+        <tr>
+            <td>
+              <a href="https://10.100.0.42/otrs/index.pl?Action=AgentTicketZoom;TicketID=<?php echo $ticket['id']; ?>" target="_blank">
+                <?php echo $ticket['tn']; ?>
+              </a>
+            </td>
+          <td><?php echo $ticket['type'];?></td>   
+          <td><?php echo $ticket['title'];?></td>   
+          <td><?php echo $ticket['product'];?></td>   
+          <td><?php echo $ticket['closetime'];?></td>  
+        </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+    <div class="clearfix"></div>
+  </div>
+</div>
+
+<!-- JS -->
+<script type="text/javascript">
+/* Data tables */
+  $(document).ready(function() {
+    $('#data-table').dataTable({
+       "sPaginationType": "full_numbers",
+
+    });
+
+  });
+
+</script>
+    
+
+
+
+

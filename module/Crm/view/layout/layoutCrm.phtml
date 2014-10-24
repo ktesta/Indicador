@@ -1,0 +1,181 @@
+<?php 
+
+  use Zend\Authentication\AuthenticationService;
+
+  $auth = new AuthenticationService();
+  $user = $auth->getIdentity();
+  $username = $user['cn'][0];
+
+?>
+
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <?php echo $this->headTitle('Horizons '. $this->translate('Business Telecom'))->setSeparator(' - ')->setAutoEscape(false) ?>
+
+  <?php echo $this->headMeta()
+  ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+  ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+  ?>
+
+  <!-- Le styles -->
+  <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/logo.png'))
+  ->prependStylesheet($this->basePath() . '/css/style.css')
+  ->prependStylesheet($this->basePath() . '/css/bootstrap-theme.min.css')
+  ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css') 
+  ->prependStylesheet($this->basePath() . '/css/font-awesome.min.css')
+  ->prependStylesheet($this->basePath() . '/css/jquery-ui.css')
+  ->prependStylesheet($this->basePath() . '/css/fullcalendar.css')
+  ->prependStylesheet($this->basePath() . '/css/prettyPhoto.css')
+  ->prependStylesheet($this->basePath() . '/css/rateit.css')
+  ->prependStylesheet($this->basePath() . '/css/bootstrap-datetimepicker.min.css')
+  ->prependStylesheet($this->basePath() . '/css/jquery.cleditor.css')
+  ->prependStylesheet($this->basePath() . '/css/jquery.dataTables.css')
+  ->prependStylesheet($this->basePath() . '/css/jquery.onoff.css')
+  ->prependStylesheet($this->basePath() . '/css/style.css')
+  ->prependStylesheet($this->basePath() . '/css/widgets.css')
+
+  ?>
+
+<!-- Scripts -->
+  <?php echo $this->headScript()
+  ->prependFile($this->basePath() . '/js/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9',))
+  ->prependFile($this->basePath() . '/js/html5shiv.js',   'text/javascript', array('conditional' => 'lt IE 9',))
+  ->prependFile($this->basePath() . '/js/jquery-ui.min.js')
+  ->prependFile($this->basePath() . '/js/fullcalendar.min.js')
+  ->prependFile($this->basePath() . '/js/jquery.rateit.min.js')
+  ->prependFile($this->basePath() . '/js/jquery.prettyPhoto.js')
+  ->prependFile($this->basePath() . '/js/jquery.slimscroll.min.js')
+  ->prependFile($this->basePath() . '/js/jquery.dataTables.min.js')
+  ->prependFile($this->basePath() . '/js/jquery.flot.stack.js')
+  ->prependFile($this->basePath() . '/js/themes/default.js')
+  ->prependFile($this->basePath() . '/js/layouts/bottom.js')
+  ->prependFile($this->basePath() . '/js/layouts/topRight.js')
+  ->prependFile($this->basePath() . '/js/layouts/top.js')
+  ->prependFile($this->basePath() . '/js/sparklines.js')
+  ->prependFile($this->basePath() . '/js/jquery.cleditor.min.js')
+  ->prependFile($this->basePath() . '/js/bootstrap-datetimepicker.min.js')
+  ->prependFile($this->basePath() . '/js/jquery.onoff.min.js')
+  ->prependFile($this->basePath() . '/js/filter.js')
+  ->prependFile($this->basePath() . '/js/bootstrap.min.js')
+  ->prependFile($this->basePath() . '/js/exporting.js')
+  ->prependFile($this->basePath() . '/js/highcharts.js')
+  ->prependFile($this->basePath() . '/js/custom.js')
+  ->prependFile($this->basePath() . '/js/jquery.js')
+
+  ; ?>
+ 
+
+</head>
+
+
+
+<body> 
+  <!-- Header starts -->
+<header>
+  <div class="navbar navbar-fixed-top bs-docs-nav" role="banner">
+    
+      <div class="navbar navbar-fixed-top bs-docs-nav" role="banner">
+        <div class="conjtainer">
+          <!-- Menu button for smallar screens -->
+          <div class="navbar-header">
+            <button class="navbar-toggle btn-navbar" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+              <span>Menu</span>
+            </button>
+            <!-- Site name for smallar screens -->
+          </div>
+
+          <!-- Navigation starts -->
+
+          <ul class="nav navbar-nav">  
+
+            <li class="dropdown dropdown-big">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <img src="<?php echo $this->basePath('img/logo.png') ?>"/> <b>PORTAL DE INDICADORES</b>
+              </a>
+            </li>
+            <!-- Upload to server link. Class "dropdown-big" creates big dropdown -->
+            <li role="button" class=" dropdown dropdown-big disabled"  >
+              <a href="#<?php //echo $this->url('nocMain', array('action' => 'index'), null, true); ?>" class="dropdown-toggle"  ><span class="label label-default"><i class="fa fa-signal"></i></span> NOC</a>
+            </li>
+
+            <!-- Sync to server link -->
+            <li class="dropdown dropdown-big">
+              <a href="<?php echo $this->url('crmMain', array('action' => 'index'), null, true); ?>" class="dropdown-toggle" ><span class="label label-primary "><i class="fa fa-signal"></i></span> CRM</a>
+            </li>
+
+            <!-- Sync to server link -->
+            <li class="disabled ">
+              <a href="#" class="dropdown-toggle" ><span class="label label-success"><i class="fa fa-signal"></i></span> KPI</a>
+            </li>
+
+          </ul>
+
+          <!-- Links -->
+          <ul class="nav navbar-nav pull-right">
+            <li class="dropdown pull-right">            
+              <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                <i class="fa fa-user"></i> <?php echo $username; ?> <b class="caret"></b>              
+              </a>
+
+              <!-- Dropdown menu -->
+              <ul class="dropdown-menu">
+                <li class='disabled'><a href="#"><i class="fa fa-cogs "></i> Settings</a></li>
+                <li><a href="<?php echo $this->url('logout', array( 'action' => 'Logout' ), null, true); ?>"><i class="fa fa-sign-out"></i> Logout</a></li>
+              </ul>
+            </li>
+
+          </ul>
+        </nav>
+
+      </div>
+    </div>
+
+  </div>
+</header>
+
+  <!-- Modal -->
+    <div class="modal fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title" id="myModalLabel">Lista de Tickets</h4>
+          </div>
+          <div class="modal-body">
+            <div id='logTicket'></div> 
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+ <?php echo $this->render('layout/mainCrm.phtml') ?>
+
+<div class="content">
+    <?php echo $this->content; ?>
+</div>
+
+
+<!-- Footer starts -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <!-- Copyright info -->
+          <p class="copy">&copy; 2014 - <?php echo date('Y') ?> by Horizons Business Telecom Ltda. <?php echo $this->translate('All rights reserved.') ?> </p>
+        </div>
+      </div>
+    </div>
+  </footer> 
+<!-- Footer ends -->
+
+<!-- Scroll to top -->
+<span class="totop"><a href="#"><i class="fa fa-chevron-up"></i></a></span> 
+
+
+</body>
+</html>
