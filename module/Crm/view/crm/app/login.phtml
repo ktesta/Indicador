@@ -18,7 +18,7 @@
 <!-- Scripts -->
   <?php echo $this->headScript()
   ->prependFile($this->basePath() . '/js/bootstrap.min.js')
-  ->prependFile($this->basePath() . '/js/jquery.js')
+  ->prependFile($this->basePath() . '/js/jquery.min.js')
 
   ; ?>
  
@@ -28,67 +28,67 @@
 
 <body>
 
-  <!-- Form area -->
-  <div class="admin-form">
-    <div class="container">
+    <!-- Form area -->
+    <div class="admin-form">
+      <div class="container">
 
-      <div class="row">
-        <div class="col-md-12">
-          <!-- Widget starts -->
-          <div class="widget worange">
-            <!-- Widget head -->
-            <div class="widget-head">
-              <img align="left" src="<?php echo $this->basePath('img/logo.png') ?>"/> 
-              <div>&nbsp <b>PORTAL DE INDICADORES</b> - Login </div>
-            </div>
+        <div class="row">
+          <div class="col-md-12">
+            <!-- Widget starts -->
+            <div class="widget worange">
+              <!-- Widget head -->
+              <div class="widget-head">
+                <img align="left" src="<?php echo $this->basePath('img/logo.png') ?>"/> 
+                <div>&nbsp <b>PORTAL DE INDICADORES</b> - Login </div>
+              </div>
 
-            <div class="widget-content">
-              <div class="padd">
-                <!-- Login form -->
-                <form class="form-horizontal">
-                  <!-- Email -->
-                  <div class="form-group">
-                    <label class="control-label col-lg-3" for="inputEmail">Login</label>
-                    <div class="col-lg-9">
-                      <input type="text" class="form-control" id="login" placeholder="Login">
+              <div class="widget-content">
+                <div class="padd">
+                  <!-- Login form -->
+                  <form class="form-horizontal">
+                    <!-- Email -->
+                    <div class="form-group">
+                      <label class="control-label col-lg-3" for="inputEmail">Login</label>
+                      <div class="col-lg-9">
+                        <input type="text" class="form-control" id="login" placeholder="Login">
+                      </div>
+                    </div>
+                    <!-- Password -->
+                    <div class="form-group">
+                      <label class="control-label col-lg-3" for="inputPassword">Senha </label>
+                      <div class="col-lg-9">
+                        <input type="password" class="form-control" id="password" placeholder="Senha">
+                      </div>
+                    </div>
+                    <!-- Remember me checkbox and sign in button -->
+                    <div class="form-group">
+                     <div class="col-lg-9 col-lg-offset-3">
+                      <div class="checkbox">
+                        <label>
+                          <input type="checkbox"> Lembrar
+                        </label>
+                      </div>
                     </div>
                   </div>
-                  <!-- Password -->
-                  <div class="form-group">
-                    <label class="control-label col-lg-3" for="inputPassword">Senha </label>
-                    <div class="col-lg-9">
-                      <input type="password" class="form-control" id="password" placeholder="Senha">
-                    </div>
-                  </div>
-                  <!-- Remember me checkbox and sign in button -->
-                  <div class="form-group">
-                   <div class="col-lg-9 col-lg-offset-3">
-                    <div class="checkbox">
-                      <label>
-                        <input type="checkbox"> Lembrar
-                      </label>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-lg-9 col-lg-offset-3">
-                 <button id="submit" type="submit" class="btn btn-info btn-sm">Entrar</button>
-                 <button type="reset" class="btn btn-default btn-sm">Limpar</button>
-               </div>
-               <br />
-             </form>
+                  <div class="col-lg-9 col-lg-offset-3">
+                   <button id="submit" type="submit" class="btn btn-info btn-sm">Entrar</button>
+                   <button type="reset" class="btn btn-default btn-sm">Limpar</button>
+                 </div>
+                 <br />
+               </form>
 
+             </div>
            </div>
-         </div>
 
-          <div class="widget-foot">
-            <div id="ajaxLoader"></div>
-            Não consegue entrar? <a href="mailto:qep@horizonstelecom.com">Clique aqui </a>
-          </div>
-        </div>  
+            <div class="widget-foot">
+              <div id="ajaxLoader"></div>
+              Não consegue entrar? <a href="mailto:qep@horizonstelecom.com">Clique aqui </a>
+            </div>
+          </div>  
+        </div>
       </div>
-    </div>
-  </div> 
-</div>
+    </div> 
+  </div>
 
 		
 
