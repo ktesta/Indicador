@@ -21,6 +21,9 @@ class TmaTicket
 
     public function ticketList($filter)
     {   
+
+        $sqlType = NULL;
+        
         if( !empty( $filter['type'] ) ){
             
             $i = 0; 
