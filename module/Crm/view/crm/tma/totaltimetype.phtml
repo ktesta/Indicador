@@ -68,13 +68,15 @@
                                 click: function () {
                                     var firstDate = $('#firstDate').val();
                                     var lastDate = $('#lastDate').val();
+                                    var type = $('#type').val();
                                     var tmatotal = " AND tmatotal = '" + this.series.name + "'";
                                     if(this.series.name == 'Até 4 horas'){
                                         var tmatotal = " AND (tmatotal = '" + this.series.name + "' OR tmatotal like 'Fechado%')";
                                     }
                                     var where = "status = 'closed successful' AND closetime >= '" + firstDate + "' AND closetime <= '" + lastDate + "' AND type = '" + this.category + "'" + tmatotal ;
                                     $.post( "ticketlist", 
-                                            { where: where } ).done(function( data ) {
+                                            { where: where,
+                                              type: type } ).done(function( data ) {
                                         $('#logTicket').html(data);  
                                     });                                           
                                     $('#myModal').modal('show');

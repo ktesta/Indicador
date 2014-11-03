@@ -68,6 +68,7 @@ class TmaController extends AbstractActionController
         $volumeTicket = $this->getTables('Crm\Model\TmaTicket')->totalTime($postData);
 
         $valuesGraph = NULL;
+        $values = NULL;
         foreach ($volumeTicket as $data) {
             $legend = $data['tmatotal'];
             $values = $data['total'];
@@ -76,7 +77,9 @@ class TmaController extends AbstractActionController
         }
         
         $viewModel = new ViewModel(array(
-            'values' => $valuesGraph ,
+            'valuesGraph' => $valuesGraph ,
+            'values' => $values
+
         ));
 
         $viewModel->setTerminal(true);
@@ -92,6 +95,7 @@ class TmaController extends AbstractActionController
         $volumeTicket = $this->getTables('Crm\Model\TmaTicket')->totalTimeAcionamento($postData);
 
         $valuesGraph = NULL;
+        $values = NULL;
         foreach ($volumeTicket as $data) {
             $legend = $data['tmatotal'];
             $values = $data['total'];
@@ -100,7 +104,8 @@ class TmaController extends AbstractActionController
         }
         
         $viewModel = new ViewModel(array(
-            'values' => $valuesGraph ,
+            'valuesGraph' => $valuesGraph ,
+            'values' => $values
         ));
 
         $viewModel->setTerminal(true);
@@ -116,6 +121,7 @@ class TmaController extends AbstractActionController
         $volumeTicket = $this->getTables('Crm\Model\TmaTicket')->totalTimeAtendimento($postData);
 
         $valuesGraph = NULL;
+        $values = NULL;
         foreach ($volumeTicket as $data) {
             $legend = $data['tmatotal'];
             $values = $data['total'];
@@ -124,7 +130,8 @@ class TmaController extends AbstractActionController
         }
         
         $viewModel = new ViewModel(array(
-            'values' => $valuesGraph ,
+            'valuesGraph' => $valuesGraph ,
+            'values' => $values
         ));
 
         $viewModel->setTerminal(true);

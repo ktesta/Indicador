@@ -40,7 +40,6 @@ class CustomerController extends AbstractActionController
         $ticketList = $this->getTables('Crm\Model\CustomerTicket')->ticketList($postData);
         $viewModel = new ViewModel(array(
             'ticketList' => $ticketList,
-            //'name' => $ticketList['name']
         ));
 
         $viewModel->setTerminal(true);

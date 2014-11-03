@@ -22,12 +22,33 @@ class CustomerTicket
 
     public function ticketList($filter)
     {   
+
+        $sqlType = NULL;
+
+        if( !empty( $filter['type'] ) ){
+            
+            $i = 0; 
+            foreach ($filter['type'] as $type){
+                
+                if( $i == 0){
+                    $sqlType= " AND (type = '$type' ";
+                }
+                else{
+                    $sqlType.= " OR type = '$type' ";
+                }
+
+                $i++;
+            }
+            $sqlType.= " ) ";
+        }
+
         $db = $this->connection();
 
         $sql = "SELECT * 
                 FROM crm_otrs_ticket_summary 
                 WHERE ".
-                    $filter['where'] ;
+                    $filter['where'] .
+                    $sqlType ;
 
         $stmt = $db->query($sql);
         $results = $stmt->execute();
@@ -39,7 +60,24 @@ class CustomerTicket
     {   
         $firstDate = $filter['filter']['firstDate'];
         $lastDate = $filter['filter']['lastDate'];
+        $sqlType = NULL;
 
+        if( !empty( $filter['filter']['type'] ) ){
+            
+            $i = 0; 
+            foreach ($filter['filter']['type'] as $type){
+                if( $i == 0){
+                    $sqlType= " AND (type = '$type' ";
+                }
+                else{
+                    $sqlType.= " OR type = '$type' ";
+                }
+
+                $i++;
+            }
+            $sqlType.= " ) ";
+        }
+            
         $db = $this->connection();
 
         $sql = "SELECT 
@@ -49,7 +87,8 @@ class CustomerTicket
                 WHERE 
                     status = 'closed successful' AND 
                     closetime >= '$firstDate' AND 
-                    closetime <= '$lastDate'
+                    closetime <= '$lastDate' 
+                    $sqlType 
                 GROUP BY customer
                 ORDER BY volume DESC
                 LIMIT 10
@@ -65,6 +104,23 @@ class CustomerTicket
     {   
         $firstDate = $filter['filter']['firstDate'];
         $lastDate = $filter['filter']['lastDate'];
+        $sqlType = NULL;
+
+        if( !empty( $filter['filter']['type'] ) ){
+            
+            $i = 0; 
+            foreach ($filter['filter']['type'] as $type){
+                if( $i == 0){
+                    $sqlType= " AND (type = '$type' ";
+                }
+                else{
+                    $sqlType.= " OR type = '$type' ";
+                }
+
+                $i++;
+            }
+            $sqlType.= " ) ";
+        }
 
         $db = $this->connection();
 
@@ -76,10 +132,10 @@ class CustomerTicket
                     status = 'closed successful' AND 
                     closetime >= '$firstDate' AND 
                     closetime <= '$lastDate' AND 
-                    product <> ''
+                    product <> '' 
+                    $sqlType 
                 GROUP BY product
                  ";
-
         $stmt = $db->query($sql);
         $results = $stmt->execute();
         

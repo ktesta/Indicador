@@ -17,6 +17,9 @@
   </div>
 </div>
         
+<?php 
+    if ( $this->values != 0 ):
+?>      
 
 <script type="text/javascript">
 
@@ -40,9 +43,11 @@
                                 click: function () {
                                     var firstDate = $('#firstDate').val();
                                     var lastDate = $('#lastDate').val();
+                                    var type = $('#type').val();
                                     var where = "status = 'closed successful' AND closetime >= '" + firstDate + "' AND closetime <= '" + lastDate + "' AND tmatotal = '" + this.name + "'";
                                     $.post( "ticketlist", 
-                                            { where: where } ).done(function( data ) {
+                                            { where: where,
+                                              type: type } ).done(function( data ) {
                                         $('#logTicket').html(data);  
                                     });                                           
                                     $('#myModal').modal('show');
@@ -68,9 +73,21 @@
             type: 'pie',
             name: 'Volume',
             data: [
-                <?php echo $this->values; ?>
+                <?php echo $this->valuesGraph; ?>
             ]
         }]
     });
   
 </script>
+
+<?php 
+    else :
+?>
+<script type="text/javascript">
+        
+        $('#totalTime').html('<h3 align="center"><i>Não há dados para exibir o gráfico "Tempo total dos tickets". Por favor, altere os filtros.</i></h3>');
+
+</script>
+<?php
+    endif
+?>

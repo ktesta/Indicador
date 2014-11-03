@@ -21,12 +21,30 @@ class TmaTicket
 
     public function ticketList($filter)
     {   
+        if( !empty( $filter['type'] ) ){
+            
+            $i = 0; 
+            foreach ($filter['type'] as $type){
+                
+                if( $i == 0){
+                    $sqlType= " AND (type = '$type' ";
+                }
+                else{
+                    $sqlType.= " OR type = '$type' ";
+                }
+
+                $i++;
+            }
+            $sqlType.= " ) ";
+        }
+        
         $db = $this->connection();
 
         $sql = "SELECT * 
                 FROM crm_otrs_ticket_summary 
                 WHERE ".
-                    $filter['where'] ;
+                    $filter['where'] .
+                    $sqlType ;
 
         $stmt = $db->query($sql);
         $results = $stmt->execute();
@@ -38,9 +56,25 @@ class TmaTicket
     {   
         $firstDate = $filter['filter']['firstDate'];
         $lastDate = $filter['filter']['lastDate'];
+        $sqlType = NULL;
+
+        if( !empty( $filter['filter']['type'] ) ){
+            
+            $i = 0; 
+            foreach ($filter['filter']['type'] as $type){
+                if( $i == 0){
+                    $sqlType= " AND (type = '$type' ";
+                }
+                else{
+                    $sqlType.= " OR type = '$type' ";
+                }
+
+                $i++;
+            }
+            $sqlType.= " ) ";
+        }
 
         $db = $this->connection();
-
         $sql = "SELECT 
                     COUNT(*) AS total, 
                     tmatotal 
@@ -48,12 +82,13 @@ class TmaTicket
                 WHERE 
                     status = 'closed successful' AND 
                     closetime >= '$firstDate' AND 
-                    closetime <= '$lastDate'
+                    closetime <= '$lastDate' 
+                    $sqlType
                 GROUP BY tmatotal ";
 
         $stmt = $db->query($sql);
         $results = $stmt->execute();
-        
+
         return $results;
        
     }
@@ -62,6 +97,23 @@ class TmaTicket
     {   
         $firstDate = $filter['filter']['firstDate'];
         $lastDate = $filter['filter']['lastDate'];
+        $sqlType = NULL;
+
+        if( !empty( $filter['filter']['type'] ) ){
+            
+            $i = 0; 
+            foreach ($filter['filter']['type'] as $type){
+                if( $i == 0){
+                    $sqlType= " AND (type = '$type' ";
+                }
+                else{
+                    $sqlType.= " OR type = '$type' ";
+                }
+
+                $i++;
+            }
+            $sqlType.= " ) ";
+        }
 
         $db = $this->connection();
 
@@ -74,6 +126,7 @@ class TmaTicket
                     closetime >= '$firstDate' AND 
                     closetime <= '$lastDate' AND 
                     tratamento_tecnico + binario > 0
+                    $sqlType
                 GROUP BY tmatotal ";
 
         $stmt = $db->query($sql);
@@ -87,6 +140,23 @@ class TmaTicket
     {   
         $firstDate = $filter['filter']['firstDate'];
         $lastDate = $filter['filter']['lastDate'];
+        $sqlType = NULL;
+
+        if( !empty( $filter['filter']['type'] ) ){
+            
+            $i = 0; 
+            foreach ($filter['filter']['type'] as $type){
+                if( $i == 0){
+                    $sqlType= " AND (type = '$type' ";
+                }
+                else{
+                    $sqlType.= " OR type = '$type' ";
+                }
+
+                $i++;
+            }
+            $sqlType.= " ) ";
+        }
 
         $db = $this->connection();
 
@@ -99,6 +169,7 @@ class TmaTicket
                     closetime >= '$firstDate' AND 
                     closetime <= '$lastDate' AND 
                     (tratamento_tecnico + binario) = 0
+                    $sqlType
                 GROUP BY tmatotal ";
 
         $stmt = $db->query($sql);
@@ -112,6 +183,23 @@ class TmaTicket
     {   
         $firstDate = $filter['filter']['firstDate'];
         $lastDate = $filter['filter']['lastDate'];
+        $sqlType = NULL;
+
+        if( !empty( $filter['filter']['type'] ) ){
+            
+            $i = 0; 
+            foreach ($filter['filter']['type'] as $type){
+                if( $i == 0){
+                    $sqlType= " AND (type = '$type' ";
+                }
+                else{
+                    $sqlType.= " OR type = '$type' ";
+                }
+
+                $i++;
+            }
+            $sqlType.= " ) ";
+        }
 
         $db = $this->connection();
 
@@ -124,6 +212,7 @@ class TmaTicket
                     status = 'closed successful' AND 
                     closetime >= '$firstDate' AND 
                     closetime <= '$lastDate'
+                    $sqlType
                 GROUP BY tmatotal,type ";
 
         $stmt = $db->query($sql);
