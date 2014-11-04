@@ -1,3 +1,4 @@
+
 <div class="col-md-6">
   <div class="widget">
     <div class="widget-head">
@@ -10,7 +11,7 @@
     </div>             
     <div class="widget-content">
       <div class="padd">
-        <div id="volumeProduto"></div>
+        <div id="timeFilaAtendimentoTecnicoAction"></div>
       </div>
     </div>
   </div>
@@ -18,19 +19,18 @@
         
 <?php 
     if ( $this->values != 0 ):
-?> 
+?>      
 
 <script type="text/javascript">
-    
 
-    $('#volumeProduto').highcharts({
+    $('#timeFilaAtendimentoTecnicoAction').highcharts({
       chart: {
             plotBackgroundColor: null,
             plotBorderWidth: null,
             plotShadow: false
         },
         title: {
-            text: 'Volume por produto'
+            text: 'Tempo na fila Tratamento Técnico'
         },
         tooltip: {
             pointFormat: '{series.name}: <b>{point.y} - {point.percentage:.1f}%</b>'
@@ -40,17 +40,15 @@
                     cursor: 'pointer',
                     point: {
                             events: {
-                                click: function () {                                    
+                                click: function () {
                                     var firstDate = $('#firstDate').val();
                                     var lastDate = $('#lastDate').val();
                                     var type = $('#type').val();
-                                    var where = "status = 'closed successful' AND closetime >= '" + firstDate + "' AND closetime <= '" + lastDate + "' AND product = '" + this.name + "'";
-
+                                    var where = "status = 'closed successful' AND closetime >= '" + firstDate + "' AND closetime <= '" + lastDate + "' AND tma_total_atendimento_tecnico = '" + this.name + "'";
                                     $.post( "ticketlist", 
                                             { where: where,
                                               type: type } ).done(function( data ) {
                                         $('#logTicket').html(data);  
-                                        $('#myModalLabel').html('Lista de Tickets ');     
                                     });                                           
                                     $('#myModal').modal('show');
                                 }
@@ -63,7 +61,7 @@
                 cursor: 'pointer',
                 dataLabels: {
                     enabled: true,
-                    format: '<b>{point.name}</b>: {point.y} - {point.percentage:.1f} %',
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
                     style: {
                         color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
                     },
@@ -87,10 +85,9 @@
 ?>
 <script type="text/javascript">
         
-        $('#volumeProduto').html('<h3 align="center"><i>Não há dados para exibir o gráfico "Volume por produto". Por favor, altere os filtros.</i></h3>');
+        $('#timeFilaAtendimentoTecnicoAction').html('<h3 align="center"><i>Não há dados para exibir o gráfico "Tempo na fila Atendimento Técnico". Por favor, altere os filtros.</i></h3>');
 
 </script>
 <?php
     endif
 ?>
-

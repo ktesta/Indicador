@@ -74,7 +74,9 @@ function main()
 		$openBy = openBy($id); //função que retorna o login de quem abriu o ticket	
 		$timeTotal = timeTotal($create_time, $closeDate); //função que retorna o tempo total do ticket	
 		$queueTime = queueTime($id, $create_time, $closeDate); //função que retorna um array com o tempo por fila do ticket
-		$tmaTotal = tmaTotal($create_time, $closeDate); //função que retorna um array com o tempo por fila do ticket
+		$tmaTotal = tmaTotal($create_time, $closeDate, null); //função que retorna o tempo total do ticket (por extenso)
+		$tmaTotalAtendimento = tmaTotal( null, null, $queueTime['atendimento'] ); //função que retorna o tempo na fila atendimento do ticket (por extenso)
+		$tmaTotalTratamentoTecnico = tmaTotal( null, null, $queueTime['tratamentoTecnico'] ); //função que retorna o tempo na fila atendimento do ticket (por extenso)
 		$causa = causa($id); //função que retorna a causa do ticket
 		$solucao = solucao($id); //função que retorna a solução do ticket
 		$customerData = customerData($customer_id); //função que retorna o nome do cliente
@@ -131,7 +133,9 @@ function main()
 										id,
 										causa,
 										solucao,
-										customer_name
+										customer_name,
+										tma_total_atendimento,
+										tma_total_atendimento_tecnico
 									)values (
 										'$tn', 
 										'$title', 
@@ -156,7 +160,9 @@ function main()
 										'$id',
 										'$causa',
 										'$solucao',
-										'$customerData'
+										'$customerData',
+										'$tmaTotalAtendimento',
+										'$tmaTotalTratamentoTecnico'
 									)";
 			//echo "<br>";
 
@@ -369,12 +375,21 @@ function timeTotal($openDate, $closeDate)
 	return $timeTotal;
 }
 
-function tmaTotal($openDate, $closeDate)
+function tmaTotal($openDate, $closeDate, $time)
 {	
-	$openDate = strtotime($openDate);
-	$closeDate = strtotime($closeDate);
+	if(!empty($openDate) && !empty($closeDate) ){
 
-	$timeTotal = ($closeDate - $openDate) / 3600;
+		$openDate = strtotime($openDate);
+		$closeDate = strtotime($closeDate);
+
+		$timeTotal = ($closeDate - $openDate) / 3600;
+	}
+	else if( !empty($time) ) {
+		$timeTotal = $time / 3600;
+	}
+	else{
+		return NULL;
+	}
 
    	if ($timeTotal == 0){
 		$tmaTotal = "Fechado na hora da abertura";

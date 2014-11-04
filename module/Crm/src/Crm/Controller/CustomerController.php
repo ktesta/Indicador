@@ -90,6 +90,7 @@ class CustomerController extends AbstractActionController
         $volumeTicket = $this->getTables('Crm\Model\CustomerTicket')->volumeProduto($postData);
 
         $valuesGraph = NULL;
+        $values = NULL;
         foreach ($volumeTicket as $data) {
             $legend = $data['product'];
             $values = $data['volume'];
@@ -98,7 +99,8 @@ class CustomerController extends AbstractActionController
         }
 
         $viewModel = new ViewModel(array(
-            'values' => $valuesGraph ,
+            'valuesGraph' => $valuesGraph ,
+            'values' => $values ,
         ));
 
         $viewModel->setTerminal(true);

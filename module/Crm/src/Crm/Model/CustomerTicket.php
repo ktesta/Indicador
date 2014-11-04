@@ -2,9 +2,16 @@
 namespace Crm\Model;
 
 use Zend\Db\Adapter\Adapter as DbAdapter;
+use AppController;
 
 class CustomerTicket
 {   
+    protected $app;
+
+    function __construct()
+    {
+        $this->app = new App;
+    }
 
     public function connection()
     {
@@ -23,24 +30,7 @@ class CustomerTicket
     public function ticketList($filter)
     {   
 
-        $sqlType = NULL;
-
-        if( !empty( $filter['type'] ) ){
-            
-            $i = 0; 
-            foreach ($filter['type'] as $type){
-                
-                if( $i == 0){
-                    $sqlType= " AND (type = '$type' ";
-                }
-                else{
-                    $sqlType.= " OR type = '$type' ";
-                }
-
-                $i++;
-            }
-            $sqlType.= " ) ";
-        }
+        $sqlType = $this->app->filterTypeTicketList($filter);
 
         $db = $this->connection();
 
@@ -60,23 +50,7 @@ class CustomerTicket
     {   
         $firstDate = $filter['filter']['firstDate'];
         $lastDate = $filter['filter']['lastDate'];
-        $sqlType = NULL;
-
-        if( !empty( $filter['filter']['type'] ) ){
-            
-            $i = 0; 
-            foreach ($filter['filter']['type'] as $type){
-                if( $i == 0){
-                    $sqlType= " AND (type = '$type' ";
-                }
-                else{
-                    $sqlType.= " OR type = '$type' ";
-                }
-
-                $i++;
-            }
-            $sqlType.= " ) ";
-        }
+        $sqlType = $this->app->filterType($filter);
             
         $db = $this->connection();
 
@@ -104,23 +78,8 @@ class CustomerTicket
     {   
         $firstDate = $filter['filter']['firstDate'];
         $lastDate = $filter['filter']['lastDate'];
-        $sqlType = NULL;
-
-        if( !empty( $filter['filter']['type'] ) ){
-            
-            $i = 0; 
-            foreach ($filter['filter']['type'] as $type){
-                if( $i == 0){
-                    $sqlType= " AND (type = '$type' ";
-                }
-                else{
-                    $sqlType.= " OR type = '$type' ";
-                }
-
-                $i++;
-            }
-            $sqlType.= " ) ";
-        }
+        
+        $sqlType = $this->app->filterType($filter);
 
         $db = $this->connection();
 
@@ -141,4 +100,5 @@ class CustomerTicket
         
         return $results;
     }
+
 }

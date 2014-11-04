@@ -2,9 +2,18 @@
 namespace Crm\Model;
 
 use Zend\Db\Adapter\Adapter as DbAdapter;
+use AppController;
 
 class TmaTicket
 {   
+
+    protected $app;
+
+    function __construct()
+    {
+        $this->app = new App;
+    }
+
     public function connection()
     {
         $db = new DbAdapter(
@@ -22,24 +31,7 @@ class TmaTicket
     public function ticketList($filter)
     {   
 
-        $sqlType = NULL;
-        
-        if( !empty( $filter['type'] ) ){
-            
-            $i = 0; 
-            foreach ($filter['type'] as $type){
-                
-                if( $i == 0){
-                    $sqlType= " AND (type = '$type' ";
-                }
-                else{
-                    $sqlType.= " OR type = '$type' ";
-                }
-
-                $i++;
-            }
-            $sqlType.= " ) ";
-        }
+        $sqlType = $this->app->filterTypeTicketList($filter);
         
         $db = $this->connection();
 
@@ -59,23 +51,7 @@ class TmaTicket
     {   
         $firstDate = $filter['filter']['firstDate'];
         $lastDate = $filter['filter']['lastDate'];
-        $sqlType = NULL;
-
-        if( !empty( $filter['filter']['type'] ) ){
-            
-            $i = 0; 
-            foreach ($filter['filter']['type'] as $type){
-                if( $i == 0){
-                    $sqlType= " AND (type = '$type' ";
-                }
-                else{
-                    $sqlType.= " OR type = '$type' ";
-                }
-
-                $i++;
-            }
-            $sqlType.= " ) ";
-        }
+        $sqlType = $this->app->filterType($filter);        
 
         $db = $this->connection();
         $sql = "SELECT 
@@ -100,23 +76,7 @@ class TmaTicket
     {   
         $firstDate = $filter['filter']['firstDate'];
         $lastDate = $filter['filter']['lastDate'];
-        $sqlType = NULL;
-
-        if( !empty( $filter['filter']['type'] ) ){
-            
-            $i = 0; 
-            foreach ($filter['filter']['type'] as $type){
-                if( $i == 0){
-                    $sqlType= " AND (type = '$type' ";
-                }
-                else{
-                    $sqlType.= " OR type = '$type' ";
-                }
-
-                $i++;
-            }
-            $sqlType.= " ) ";
-        }
+        $sqlType = $this->app->filterType($filter);        
 
         $db = $this->connection();
 
@@ -143,24 +103,8 @@ class TmaTicket
     {   
         $firstDate = $filter['filter']['firstDate'];
         $lastDate = $filter['filter']['lastDate'];
-        $sqlType = NULL;
-
-        if( !empty( $filter['filter']['type'] ) ){
-            
-            $i = 0; 
-            foreach ($filter['filter']['type'] as $type){
-                if( $i == 0){
-                    $sqlType= " AND (type = '$type' ";
-                }
-                else{
-                    $sqlType.= " OR type = '$type' ";
-                }
-
-                $i++;
-            }
-            $sqlType.= " ) ";
-        }
-
+        $sqlType = $this->app->filterType($filter);
+        
         $db = $this->connection();
 
         $sql = "SELECT 
@@ -182,41 +126,25 @@ class TmaTicket
        
     }
 
-    public function totalTimeType($filter)
+    public function timeFilaAtendimento($filter)
     {   
         $firstDate = $filter['filter']['firstDate'];
         $lastDate = $filter['filter']['lastDate'];
-        $sqlType = NULL;
-
-        if( !empty( $filter['filter']['type'] ) ){
-            
-            $i = 0; 
-            foreach ($filter['filter']['type'] as $type){
-                if( $i == 0){
-                    $sqlType= " AND (type = '$type' ";
-                }
-                else{
-                    $sqlType.= " OR type = '$type' ";
-                }
-
-                $i++;
-            }
-            $sqlType.= " ) ";
-        }
-
+        $sqlType = $this->app->filterType($filter);
+        
         $db = $this->connection();
 
         $sql = "SELECT 
                     COUNT(*) AS total, 
-                    type,
-                    tmatotal 
+                    tma_total_atendimento
                 FROM crm_otrs_ticket_summary 
                 WHERE 
                     status = 'closed successful' AND 
                     closetime >= '$firstDate' AND 
-                    closetime <= '$lastDate'
+                    closetime <= '$lastDate' AND 
+                    tma_total_atendimento <> ''
                     $sqlType
-                GROUP BY tmatotal,type ";
+                GROUP BY tma_total_atendimento ";
 
         $stmt = $db->query($sql);
         $results = $stmt->execute();
@@ -224,4 +152,33 @@ class TmaTicket
         return $results;
        
     }
+
+    public function timeFilaAtendimentoTecnico($filter)
+    {   
+        $firstDate = $filter['filter']['firstDate'];
+        $lastDate = $filter['filter']['lastDate'];
+        $sqlType = $this->app->filterType($filter);
+        
+        $db = $this->connection();
+
+        $sql = "SELECT 
+                    COUNT(*) AS total, 
+                    tma_total_atendimento_tecnico
+                FROM crm_otrs_ticket_summary 
+                WHERE 
+                    status = 'closed successful' AND 
+                    closetime >= '$firstDate' AND 
+                    closetime <= '$lastDate' AND 
+                    tma_total_atendimento_tecnico <> ''
+                    $sqlType
+                GROUP BY tma_total_atendimento_tecnico ";
+
+        $stmt = $db->query($sql);
+        $results = $stmt->execute();
+        
+        return $results;
+       
+    }
+
+
 }

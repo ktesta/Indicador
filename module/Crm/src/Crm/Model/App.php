@@ -3,6 +3,7 @@ namespace Crm\Model;
 
 use Zend\Db\Adapter\Adapter as DbAdapter;
 
+
 class App
 {   
 
@@ -20,6 +21,7 @@ class App
         return $db;
     }
 
+    //Ao logar no sistema, registra no sistema
     public function log($username)
     {   
 
@@ -33,5 +35,55 @@ class App
         $results = $stmt->execute();
         
         return $results;
+    }
+
+    //Ajusta query SQL para filtrar pelo tipo do ticket - Gráficos
+    public function filterType( $filter )
+    {
+        if( !empty( $filter['filter']['type'] ) ){
+            
+            $i = 0; 
+            foreach ($filter['filter']['type'] as $type){
+                if( $i == 0){
+                    $sqlType= " AND (type = '$type' ";
+                }
+                else{
+                    $sqlType.= " OR type = '$type' ";
+                }
+
+                $i++;
+            }
+            $sqlType.= " ) ";
+
+            return $sqlType;
+        }
+        else{
+            return NULL;
+        }
+    }
+
+    //Ajusta query SQL para filtrar pelo tipo do ticket - Lista de tickets
+    public function filterTypeTicketList( $filter )
+    {
+        if( !empty( $filter['type'] ) ){
+            
+            $i = 0; 
+            foreach ($filter['type'] as $type){
+                if( $i == 0){
+                    $sqlType= " AND (type = '$type' ";
+                }
+                else{
+                    $sqlType.= " OR type = '$type' ";
+                }
+
+                $i++;
+            }
+            $sqlType.= " ) ";
+
+            return $sqlType;
+        }
+        else{
+            return NULL;
+        }
     }
 }
