@@ -18,7 +18,7 @@
 </div>
         
 <?php 
-    if ( $this->values != 0 ):
+    if ( $this->open != NULL || $this->close != NULL ):
 ?>      
 
 <script type="text/javascript">
@@ -28,7 +28,7 @@
             type: 'column'
         },
         title: {
-            text: 'Volume de tickets fechados x Dia'
+            text: 'Volume de tickets x Dia'
         },
         subtitle: {
             text: ''
@@ -61,7 +61,13 @@
                     point: {
                             events: {
                                 click: function () {
-                                    var where = "status = 'closed successful' AND DATE(closetime) = '" + this.category + "'";
+                                    if( this.series.name == 'Ticket fechados'){
+                                        var where = "DATE(closetime) = '" + this.category + "'";
+                                    }
+                                    else{
+                                        var where = "DATE(opentime) = '" + this.category + "'";
+                                    }
+
                                     $.post( "ticketlist", 
                                             { where: where } ).done(function( data ) {
                                         $('#logTicket').html(data);  
@@ -78,7 +84,25 @@
         },
         series: [{
             name: 'Ticket fechados',
-            data: [ <?php echo $this->values; ?> ],
+            data: [ <?php echo $this->close; ?> ],
+            dataLabels: {
+                    enabled: true,
+                    rotation: 0,
+                    align: 'center',
+                    x: 0,
+                    y: 0,
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif',
+                        fontWeight: 'bold',
+                        
+                    }
+            }
+
+        },
+        {
+            name: 'Ticket abertos',
+            data: [ <?php echo $this->open; ?> ],
             dataLabels: {
                     enabled: true,
                     rotation: 0,
@@ -103,7 +127,7 @@
 ?>
 <script type="text/javascript">
         
-        $('#volumeTicketDia').html('<h3 align="center"><i>Não há dados para exibir o gráfico "Volume de tickets fechados x Dia". Por favor, altere os filtros.</i></h3>');
+        $('#volumeTicketDia').html('<h3 align="center"><i>Não há dados para exibir o gráfico "Volume de tickets x Dia". Por favor, altere os filtros.</i></h3>');
 
 </script>
 <?php

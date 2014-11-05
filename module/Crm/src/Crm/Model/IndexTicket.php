@@ -56,12 +56,29 @@ class IndexTicket
                 ORDER BY closeYear ASC, closeMonth ASC";
 
         $stmt = $db->query($sql);
-        $results = $stmt->execute();
+        $closeResults = $stmt->execute();
+
+        $sql = "SELECT 
+                    COUNT(*) AS total, 
+                    to_char(to_timestamp (EXTRACT(month from opentime)::text, 'MM'), 'TMmon') || '/' || EXTRACT(YEAR from opentime) AS opentime, 
+                    extract(month from opentime) AS openMonth, 
+                    extract(year from opentime) AS openYear 
+                FROM crm_otrs_ticket_summary 
+                WHERE                     
+                    opentime >= '$firstDate' AND 
+                    opentime <= '$lastDate' 
+                GROUP BY 
+                    to_char(to_timestamp (EXTRACT(month from opentime)::text, 'MM'), 'TMmon') || '/' || EXTRACT(YEAR from opentime) , openMonth, openYear 
+                ORDER BY openYear ASC, openMonth ASC";
+
+        $stmt = $db->query($sql);
+        $openResults = $stmt->execute();
         
+        $results = Array( 'closeResults' => $closeResults ,
+                          'openResults' => $openResults );
+
         return $results;
     }
-
-    
 
     public function ticketsFechadosDia($filter)
     {   
@@ -83,8 +100,24 @@ class IndexTicket
                 ORDER BY closetime ASC";
 
         $stmt = $db->query($sql);
-        $results = $stmt->execute();
+        $closeResults = $stmt->execute();
+
+        $sql = "SELECT 
+                    COUNT(*) AS total, 
+                    DATE(opentime) AS opentime 
+                FROM crm_otrs_ticket_summary 
+                WHERE 
+                    opentime >= '$firstDate' AND 
+                    opentime <= '$lastDate'
+                GROUP BY DATE(opentime) 
+                ORDER BY opentime ASC";
+
+        $stmt = $db->query($sql);
+        $openResults = $stmt->execute();
         
+        $results = Array( 'closeResults' => $closeResults ,
+                          'openResults' => $openResults );
+
         return $results;
 
     }

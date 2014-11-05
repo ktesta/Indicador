@@ -63,18 +63,27 @@ class IndexController extends AbstractActionController
         $request = $this->getRequest();
         $postData = $request->getPost()->toArray();
 
-        $volumeTicket = $this->getTables('Crm\Model\IndexTicket')->ticketsFechados($postData);
+        $closeVolumeTicket = $this->getTables('Crm\Model\IndexTicket')->ticketsFechados($postData);
 
-        $legend = NULL;
-        $values = NULL;
-        foreach ($volumeTicket as $data) {
-            $legend .= "'".$data['closetime']."',";
-            $values .= $data['total'].",";
+        $closeLegend = NULL;
+        $closeValues = NULL;
+        foreach ($closeVolumeTicket['closeResults'] as $data) {
+            $closeLegend .= "'".$data['closetime']."',";
+            $closeValues .= $data['total'].",";
+        }
+
+        $openLegend = NULL;
+        $openValues = NULL;
+        foreach ($closeVolumeTicket['openResults'] as $data) {
+            $openLegend .= "'".$data['opentime']."',";
+            $openValues .= $data['total'].",";
         }
 
         $viewModel = new ViewModel(array(
-            'legend' => $legend,
-            'values' => $values
+            'closeLegend' => $closeLegend,
+            'closeValues' => $closeValues,
+            'openLegend' => $openLegend,
+            'openValues' => $openValues
         ));
 
         $viewModel->setTerminal(true);
@@ -90,16 +99,55 @@ class IndexController extends AbstractActionController
 
         $volumeTicket = $this->getTables('Crm\Model\IndexTicket')->ticketsFechadosDia($postData);
 
-        $legend = NULL;
-        $values = NULL;
-        foreach ($volumeTicket as $data) {
-            $legend .= "'".$data['closetime']."',";
-            $values .= $data['total'].",";
+        /*
+        $closeLegend = NULL;
+        $closeValues = NULL;
+        foreach ($volumeTicket['closeResults'] as $data) {
+            $closeLegend .= "'".$data['closetime']."',";
+            $closeValues .= $data['total'].",";
         }
-        
+
+        $openLegend = NULL;
+        $openValues = NULL;
+        foreach ($volumeTicket['openResults'] as $data) {
+            $openLegend .= "'".$data['opentime']."',";
+            $openValues .= $data['total'].",";
+        }*/
+        $dayNumber = strtotime( $postData['filter']['lastDate'] ) - strtotime( $postData['filter']['firstDate'] );
+        $dayNumber = floor($dayNumber / (60 * 60 * 24));
+
+        $date = $postData['filter']['firstDate'];
+        $legend = NULL;
+        $close = NULL;
+        $open = NULL;
+
+
+        foreach ($volumeTicket['closeResults'] as $data) {
+            $closeLegend = $data['closetime'];
+            $closeValues[$closeLegend] = $data['total'];
+        }
+
+        foreach ($volumeTicket['openResults'] as $data) {
+            $openLegend = $data['opentime'];
+            $openValues[$openLegend] = $data['total'];
+        }
+
+        for( $i = 0; $i < $dayNumber; $i++ ){
+
+            $date = date('Y-m-d', strtotime("+1 days",strtotime($date)));
+            $closeValues[$date] = (!empty( $closeValues[$date] )) ? $closeValues[$date] : '0';
+            $openValues[$date] = (!empty( $openValues[$date] )) ? $openValues[$date] : '0';
+            
+            $legend .= "'" . $date . "',";
+            $close .= $closeValues[$date] . ",";  
+            $open .= $openValues[$date] . ",";  
+
+        }
+
         $viewModel = new ViewModel(array(
             'legend' => $legend,
-            'values' => $values
+            'close' => $close,
+            'open' => $open,
         ));
 
         $viewModel->setTerminal(true);

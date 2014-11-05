@@ -392,7 +392,7 @@ function tmaTotal($openDate, $closeDate, $time)
 	}
 
    	if ($timeTotal == 0){
-		$tmaTotal = "Fechado na hora da abertura";
+		$tmaTotal = "FCR";
 	}
     else if ($timeTotal > 0 && $timeTotal <= 4){
     	$tmaTotal = "Até 4 horas";

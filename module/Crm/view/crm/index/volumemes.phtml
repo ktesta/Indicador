@@ -18,7 +18,7 @@
 </div>
 
 <?php 
-    if ( $this->values != 0 ):
+    if ( $this->openValues != 0 ):
 ?>   
 
 <script type="text/javascript">
@@ -28,13 +28,13 @@
             type: 'column'
         },
         title: {
-            text: 'Volume de tickets fechados x Mês'
+            text: 'Volume de tickets x Mês'
         },
         subtitle: {
             text: ''
         },
         xAxis: {
-            categories: [ <?php echo $this->legend; ?> ]
+            categories: [ <?php echo $this->openLegend; ?> ]
         },
         yAxis: {
             min: 0,
@@ -58,7 +58,12 @@
                                 click: function () {
                                     var firstDate = $('#firstDate').val();
                                     var lastDate = $('#lastDate').val();
-                                    var where = "status = 'closed successful' AND to_char(to_timestamp (EXTRACT(month from closetime)::text, 'MM'), 'TMmon') || '/' || EXTRACT(YEAR from closetime) = '" + this.category + "' AND closetime >= '" + firstDate + "' AND closetime <= '" + lastDate + "'";
+                                    if( this.series.name == 'Ticket fechados'){
+                                        var where = "status = 'closed successful' AND to_char(to_timestamp (EXTRACT(month from closetime)::text, 'MM'), 'TMmon') || '/' || EXTRACT(YEAR from closetime) = '" + this.category + "' AND closetime >= '" + firstDate + "' AND closetime <= '" + lastDate + "'";
+                                    }
+                                    else{
+                                        var where = "to_char(to_timestamp (EXTRACT(month from opentime)::text, 'MM'), 'TMmon') || '/' || EXTRACT(YEAR from opentime) = '" + this.category + "' AND opentime >= '" + firstDate + "' AND opentime <= '" + lastDate + "'"; 
+                                    }
                                                  
                                     $.post( "ticketlist", 
                                             { where: where } ).done(function( data ) {
@@ -76,7 +81,7 @@
         },
         series: [{
             name: 'Ticket fechados',
-            data: [ <?php echo $this->values; ?> ],
+            data: [ <?php echo $this->closeValues; ?> ],
             dataLabels: {
                     enabled: true,
                     rotation: 0,
@@ -91,7 +96,25 @@
                     }
             }
 
-        },]
+        },
+        {
+            name: 'Ticket abertos',
+            data: [ <?php echo $this->openValues; ?> ],
+            dataLabels: {
+                    enabled: true,
+                    rotation: 0,
+                    align: 'center',
+                    x: 0,
+                    y: 0,
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif',
+                        fontWeight: 'bold',
+                        
+                    }
+            }
+
+        }]
     });
   
 </script>
@@ -101,7 +124,7 @@
 ?>
 <script type="text/javascript">
         
-        $('#volumeTicket').html('<h3 align="center"><i>Não há dados para exibir o gráfico "Volume de tickets fechados x Mês". Por favor, altere os filtros.</i></h3>');
+        $('#volumeTicket').html('<h3 align="center"><i>Não há dados para exibir o gráfico "Volume de tickets x Mês". Por favor, altere os filtros.</i></h3>');
 
 </script>
 <?php
