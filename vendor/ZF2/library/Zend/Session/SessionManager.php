@@ -91,7 +91,6 @@ class SessionManager extends AbstractManager
             // register the session handler with ext/session
             $this->registerSaveHandler($saveHandler);
         }
-
         session_start();
 
         $storage = $this->getStorage();

@@ -18,7 +18,6 @@ function main()
 					ticket_priority.name as ticket_priority_id, 
 					ticket_type.name as type_id, 
 					ticket_state.name as ticket_state_id
-
 				FROM ticket 
 				INNER JOIN ticket_type 
 					ON( ticket.type_id = ticket_type.id)

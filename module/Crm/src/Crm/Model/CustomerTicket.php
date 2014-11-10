@@ -74,6 +74,34 @@ class CustomerTicket
         return $results;
     }
 
+    public function volumeService($filter)
+    {   
+        $firstDate = $filter['filter']['firstDate'];
+        $lastDate = $filter['filter']['lastDate'];
+        $sqlType = $this->app->filterType($filter);
+            
+        $db = $this->connection();
+
+        $sql = "SELECT 
+                    COUNT(*) as volume,
+                    service
+                FROM crm_otrs_ticket_summary 
+                WHERE 
+                    status = 'closed successful' AND 
+                    closetime >= '$firstDate' AND 
+                    closetime <= '$lastDate' 
+                    $sqlType 
+                GROUP BY service
+                ORDER BY volume DESC
+                LIMIT 10
+                 ";
+
+        $stmt = $db->query($sql);
+        $results = $stmt->execute();
+        
+        return $results;
+    }
+
     public function volumeProduto($filter)
     {   
         $firstDate = $filter['filter']['firstDate'];

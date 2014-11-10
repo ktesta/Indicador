@@ -99,20 +99,6 @@ class IndexController extends AbstractActionController
 
         $volumeTicket = $this->getTables('Crm\Model\IndexTicket')->ticketsFechadosDia($postData);
 
-        /*
-        $closeLegend = NULL;
-        $closeValues = NULL;
-        foreach ($volumeTicket['closeResults'] as $data) {
-            $closeLegend .= "'".$data['closetime']."',";
-            $closeValues .= $data['total'].",";
-        }
-
-        $openLegend = NULL;
-        $openValues = NULL;
-        foreach ($volumeTicket['openResults'] as $data) {
-            $openLegend .= "'".$data['opentime']."',";
-            $openValues .= $data['total'].",";
-        }*/
         $dayNumber = strtotime( $postData['filter']['lastDate'] ) - strtotime( $postData['filter']['firstDate'] );
         $dayNumber = floor($dayNumber / (60 * 60 * 24));
 
@@ -120,7 +106,6 @@ class IndexController extends AbstractActionController
         $legend = NULL;
         $close = NULL;
         $open = NULL;
-
 
         foreach ($volumeTicket['closeResults'] as $data) {
             $closeLegend = $data['closetime'];

@@ -20,6 +20,7 @@ use Crm\Model\App;
 
 use Zend\Authentication\AuthenticationService;
 use Zend\Authentication\Adapter\Ldap as AuthAdapter;    
+use Zend\Session\SessionManager;
 
 use Zend\ModuleManager\Listener;
 
@@ -31,11 +32,12 @@ class Module
     {
         //ini_set('display_startup_errors',false);
         //ini_set('display_errors',false);
+        $this->initSession();
+       
         $eventManager        = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
 
-        
         $eventManager->getSharedManager()->attach('Zend\Mvc\Controller\AbstractActionController', 'dispatch', function($e) {
             $controller      = $e->getTarget();
             $controllerClass = get_class($controller);
@@ -47,7 +49,27 @@ class Module
         }, 100);
 
         $this->checkAuthentication($eventManager);
-        
+
+
+    }
+
+    public function initSession()
+    {
+        $sessionManager = new SessionManager;
+        $sessionManager->start();
+
+        if ( empty( $_SESSION['date'] ) ){
+            $_SESSION['date'] = time();
+        }
+        else  {
+            $time = time() - $_SESSION['date'];
+
+            if( $time > 1800 ){
+                $auth = new AuthenticationService();
+                $auth->clearIdentity();
+                $_SESSION['date'] = time();
+            }
+        }
     }
 
     public function getConfig()

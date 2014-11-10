@@ -100,7 +100,8 @@ class AppController extends AbstractActionController
 
             if (preg_grep('/^(OSS|QEP|NOC SN2)$/', $groups)) {
                 $user = $ldap->getEntry($username);
-                $auth->getStorage()->write($user);
+                $auth->getStorage()->write($user);               
+
                 
                 $username = $user['cn'][0];
                 $ticketList = $this->getTables('Crm\Model\App')->log($username);

@@ -82,6 +82,30 @@ class CustomerController extends AbstractActionController
         return $viewModel;
     }
 
+    public function volumeServiceAction(){
+
+        $request = $this->getRequest();
+        $postData = $request->getPost()->toArray();
+
+        $volumeTicket = $this->getTables('Crm\Model\CustomerTicket')->volumeService($postData);
+
+        $legend = NULL;
+        $values = NULL;
+        foreach ($volumeTicket as $data) {
+            $legend .= "'".$data['service']."',";
+            $values .= $data['volume'].",";
+        }
+        
+        $viewModel = new ViewModel(array(
+            'legend' => $legend,
+            'values' => $values
+        ));
+
+        $viewModel->setTerminal(true);
+
+        return $viewModel;
+    }
+
     public function volumeProdutoAction(){
 
         $request = $this->getRequest();
