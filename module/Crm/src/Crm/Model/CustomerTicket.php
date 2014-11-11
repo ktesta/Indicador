@@ -84,14 +84,15 @@ class CustomerTicket
 
         $sql = "SELECT 
                     COUNT(*) as volume,
-                    service
+                    service,
+                    customer_name
                 FROM crm_otrs_ticket_summary 
                 WHERE 
                     status = 'closed successful' AND 
                     closetime >= '$firstDate' AND 
                     closetime <= '$lastDate' 
                     $sqlType 
-                GROUP BY service
+                GROUP BY service, customer_name
                 ORDER BY volume DESC
                 LIMIT 10
                  ";

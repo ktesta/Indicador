@@ -23,6 +23,7 @@
 
 <script type="text/javascript">
 
+    var customerName = {<?php echo $this->customerName ?>};
     $('#volumeService').highcharts({
          chart: {
             type: 'column'
@@ -43,10 +44,16 @@
             }
         },
         tooltip: {
-            headerFormat: '<b><span style="font-size:12px">Cliente: {point.key}</span> </b> <br>',
-            pointFormat: '<span style="color:{series.color}">{series.name}: ' +
-                '<b>{point.y:1f} </span></b><br>',
-            footerFormat: '',
+            formatter: function () {
+                var label = '<b>' + customerName[this.x] + '</b>';
+
+                $.each(this.points, function () {
+                    label += '<br/>' + this.series.name + ': ' + this.y ;
+                });
+
+                return label;
+            },
+            shared: true,
             shared: true,
             useHTML: true
         },

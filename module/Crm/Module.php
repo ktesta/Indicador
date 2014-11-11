@@ -67,8 +67,9 @@ class Module
             if( $time > 1800 ){
                 $auth = new AuthenticationService();
                 $auth->clearIdentity();
-                $_SESSION['date'] = time();
             }
+            
+            $_SESSION['date'] = time();
         }
     }
 

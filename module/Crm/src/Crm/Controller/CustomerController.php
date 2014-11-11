@@ -91,14 +91,17 @@ class CustomerController extends AbstractActionController
 
         $legend = NULL;
         $values = NULL;
+        $customerName = NULL;
         foreach ($volumeTicket as $data) {
             $legend .= "'".$data['service']."',";
             $values .= $data['volume'].",";
+            $customerName .= "'".$data['service']."': '".$data['customer_name']."' ,";
         }
-        
+
         $viewModel = new ViewModel(array(
             'legend' => $legend,
-            'values' => $values
+            'values' => $values,
+            'customerName' => $customerName
         ));
 
         $viewModel->setTerminal(true);
