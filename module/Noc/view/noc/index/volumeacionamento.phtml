@@ -9,27 +9,25 @@
     </div>             
     <div class="widget-content">
       <div class="padd">
-        <div id="volumeProduto"></div>
+        <div id="volumeAcionamento"></div>
       </div>
     </div>
   </div>
 </div>
-        
 <?php 
     if ( $this->values != 0 ):
-?> 
+?>       
 
 <script type="text/javascript">
-    
 
-    $('#volumeProduto').highcharts({
+    $('#volumeAcionamento').highcharts({
       chart: {
             plotBackgroundColor: null,
             plotBorderWidth: null,
             plotShadow: false
         },
         title: {
-            text: 'Volume por produto'
+            text: 'Volume de acionamentos'
         },
         tooltip: {
             pointFormat: '{series.name}: <b>{point.y} - {point.percentage:.1f}%</b>'
@@ -39,18 +37,20 @@
                     cursor: 'pointer',
                     point: {
                             events: {
-                                click: function () {                                    
+                                click: function () {
                                     var firstDate = $('#firstDate').val();
                                     var lastDate = $('#lastDate').val();
-                                    var type = $('#type').val();
-                                    var where = "status = 'closed successful' AND closetime >= '" + firstDate + "' AND closetime <= '" + lastDate + "' AND product = '" + this.name + "'";
+                                    var acionamento = '(forjintel+constel+httcuritiba+httmaua+httosasco) = 0';
+                                    if(this.name == 'Volume com acionamentos'){
+                                      acionamento = '(forjintel+constel+httcuritiba+httmaua+httosasco) > 0';
+                                    }
+                                    var where = "type = 'incident' AND ts = 'closed successful' AND closetime >= '" + firstDate + "' AND closetime <= '" + lastDate + "' AND " + acionamento;
 
                                     $.post( "ticketlist", 
-                                            { where: where,
-                                              type: type } ).done(function( data ) {
+                                            { where: where } ).done(function( data ) {
                                         $('#logTicket').html(data);  
-                                        $('#myModalLabel').html('Lista de Tickets ');     
                                     });                                           
+
                                     $('#myModal').modal('show');
                                 }
                             }
@@ -74,7 +74,7 @@
             type: 'pie',
             name: 'Volume',
             data: [
-                <?php echo $this->valuesGraph; ?>
+                <?php echo $this->graph; ?>
             ]
         }]
     });
@@ -86,14 +86,10 @@
 ?>
 <script type="text/javascript">
         
-        $('#volumeProduto').html('<h3 align="center"><i>Não há dados para exibir o gráfico "Volume por produto". Por favor, altere os filtros.</i></h3>');
+        $('#volumeAcionamento').html('<h3 align="center"><i>Não há dados para exibir o gráfico "Volume de acionamentos". Por favor, altere os filtros.</i></h3>');
 
 </script>
 <?php
     endif
 ?>
 
-
-<!-- Scripts -->
-  <?php echo $this->headScript()
-  ->prependFile($this->basePath() . '/js/dropdown.js')  ; ?>

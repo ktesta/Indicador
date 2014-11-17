@@ -5,6 +5,13 @@ use Zend\Db\Adapter\Adapter as DbAdapter;
 
 class IndexTicket
 {   
+    protected $app;
+
+    function __construct()
+    {
+        $this->app = new App;
+    }
+
     public function connection()
     {
         $db = new DbAdapter(
@@ -21,12 +28,15 @@ class IndexTicket
 
     public function ticketList($filter)
     {   
+        $sqlType = $this->app->filterTypeTicketList($filter);
+
         $db = $this->connection();
 
         $sql = "SELECT * 
                 FROM crm_otrs_ticket_summary 
                 WHERE ".
-                    $filter['where'] ;
+                    $filter['where'] .
+                    $sqlType ;
 
         $stmt = $db->query($sql);
         $results = $stmt->execute();
@@ -38,6 +48,7 @@ class IndexTicket
     {   
         $firstDate = $filter['filter']['firstDate'];
         $lastDate = $filter['filter']['lastDate'];
+        $sqlType = $this->app->filterType($filter);
 
         $db = $this->connection();
 
@@ -51,6 +62,7 @@ class IndexTicket
                     status = 'closed successful' AND 
                     closetime >= '$firstDate' AND 
                     closetime <= '$lastDate' 
+                    $sqlType
                 GROUP BY 
                     to_char(to_timestamp (EXTRACT(month from closetime)::text, 'MM'), 'TMmon') || '/' || EXTRACT(YEAR from closetime) , closeMonth, closeYear 
                 ORDER BY closeYear ASC, closeMonth ASC";
@@ -67,6 +79,7 @@ class IndexTicket
                 WHERE                     
                     opentime >= '$firstDate' AND 
                     opentime <= '$lastDate' 
+                    $sqlType
                 GROUP BY 
                     to_char(to_timestamp (EXTRACT(month from opentime)::text, 'MM'), 'TMmon') || '/' || EXTRACT(YEAR from opentime) , openMonth, openYear 
                 ORDER BY openYear ASC, openMonth ASC";
@@ -85,6 +98,7 @@ class IndexTicket
 
         $firstDate = $filter['filter']['firstDate'];
         $lastDate = $filter['filter']['lastDate'];
+        $sqlType = $this->app->filterType($filter);
 
         $db = $this->connection();
 
@@ -96,6 +110,7 @@ class IndexTicket
                     status = 'closed successful' AND 
                     closetime >= '$firstDate' AND 
                     closetime <= '$lastDate'
+                    $sqlType
                 GROUP BY DATE(closetime) 
                 ORDER BY closetime ASC";
 
@@ -109,6 +124,7 @@ class IndexTicket
                 WHERE 
                     opentime >= '$firstDate' AND 
                     opentime <= '$lastDate'
+                    $sqlType
                 GROUP BY DATE(opentime) 
                 ORDER BY opentime ASC";
 
@@ -127,6 +143,7 @@ class IndexTicket
 
         $firstDate = $filter['filter']['firstDate'];
         $lastDate = $filter['filter']['lastDate'];
+        $sqlType = $this->app->filterType($filter);
 
         $db = $this->connection();
 
@@ -138,6 +155,7 @@ class IndexTicket
                     status = 'closed successful' AND 
                     closetime >= '$firstDate' AND 
                     closetime <= '$lastDate' 
+                    $sqlType
                 GROUP BY type";
 
         $stmt = $db->query($sql);
@@ -152,6 +170,7 @@ class IndexTicket
 
         $firstDate = $filter['filter']['firstDate'];
         $lastDate = $filter['filter']['lastDate'];
+        $sqlType = $this->app->filterType($filter);
 
         $db = $this->connection();
 
@@ -164,12 +183,14 @@ class IndexTicket
                         tratamento_tecnico + binario > 0 and 
                         status = 'closed successful' and 
                         closetime >= '$firstDate' and 
-                        closetime <= '$lastDate' ) AS volumeAcionamento 
+                        closetime <= '$lastDate'
+                        $sqlType ) AS volumeAcionamento                         
                 FROM crm_otrs_ticket_summary 
                 WHERE 
                     status = 'closed successful' AND 
                     closetime >= '$firstDate' AND 
-                    closetime <= '$lastDate'";
+                    closetime <= '$lastDate'
+                    $sqlType ";
 
         $stmt = $db->query($sql);
         $results = $stmt->execute();
@@ -183,6 +204,7 @@ class IndexTicket
 
         $firstDate = $filter['filter']['firstDate'];
         $lastDate = $filter['filter']['lastDate'];
+        $sqlType = $this->app->filterType($filter);
 
         $db = $this->connection();
 
@@ -194,6 +216,7 @@ class IndexTicket
                     status = 'closed successful' AND 
                     closetime >= '$firstDate' AND 
                     closetime <= '$lastDate'
+                    $sqlType
                 GROUP BY city ";
 
         $stmt = $db->query($sql);
@@ -208,6 +231,7 @@ class IndexTicket
 
         $firstDate = $filter['filter']['firstDate'];
         $lastDate = $filter['filter']['lastDate'];
+        $sqlType = $this->app->filterType($filter);
 
         $db = $this->connection();
 
@@ -220,6 +244,7 @@ class IndexTicket
                     closetime >= '$firstDate' AND 
                     closetime <= '$lastDate' AND 
                     causa <> ''
+                    $sqlType
                 GROUP BY causa 
                 ORDER BY volume DESC 
                 LIMIT 10";
@@ -235,6 +260,7 @@ class IndexTicket
     {   
         $firstDate = $filter['filter']['firstDate'];
         $lastDate = $filter['filter']['lastDate'];
+        $sqlType = $this->app->filterType($filter);
 
         $db = $this->connection();
 
@@ -246,6 +272,7 @@ class IndexTicket
                     status = 'closed successful' AND 
                     closetime >= '$firstDate' AND 
                     closetime <= '$lastDate'
+                    $sqlType
                 GROUP BY tmatotal ";
 
         $stmt = $db->query($sql);

@@ -51,7 +51,7 @@
                                 click: function () {
                                     var firstDate = $('#firstDate').val();
                                     var lastDate = $('#lastDate').val();
-                                    var where = "status = 'closed successful' AND closetime >= '" + firstDate + "' AND closetime <= '" + lastDate + "' AND type = '" + this.name + "'";
+                                    var where = "ts = 'closed successful' AND closetime >= '" + firstDate + "' AND closetime <= '" + lastDate + "' AND service_affected = 'Sim' AND causa = '" + this.name + "'";
                                     $.post( "ticketlist", 
                                             { where: where } ).done(function( data ) {
                                         $('#logTicket').html(data);  

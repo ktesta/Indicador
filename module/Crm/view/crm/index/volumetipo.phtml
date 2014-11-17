@@ -6,7 +6,6 @@
       <div class="pull-left"></div>
       <div class="widget-icons pull-right">
         <a href="#" class="wminimize"><i class="fa fa-chevron-up"></i></a> 
-        <a href="#" class="wclose"><i class="fa fa-times"></i></a>
       </div>  
       <div class="clearfix"></div>
     </div>             
@@ -44,9 +43,11 @@
                                 click: function () {
                                     var firstDate = $('#firstDate').val();
                                     var lastDate = $('#lastDate').val();
+                                    var type = $('#type').val();
                                     var where = "status = 'closed successful' AND closetime >= '" + firstDate + "' AND closetime <= '" + lastDate + "' AND type = '" + this.name + "'";
                                     $.post( "ticketlist", 
-                                            { where: where } ).done(function( data ) {
+                                            { where: where,
+                                              type: type } ).done(function( data ) {
                                         $('#logTicket').html(data);  
                                     });                                           
 

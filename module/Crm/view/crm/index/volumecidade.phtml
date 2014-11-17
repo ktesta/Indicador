@@ -4,7 +4,6 @@
       <div class="pull-left"></div>
       <div class="widget-icons pull-right">
         <a href="#" class="wminimize"><i class="fa fa-chevron-up"></i></a> 
-        <a href="#" class="wclose"><i class="fa fa-times"></i></a>
       </div>  
       <div class="clearfix"></div>
     </div>             
@@ -42,6 +41,7 @@
                                 click: function () {
                                     var firstDate = $('#firstDate').val();
                                     var lastDate = $('#lastDate').val();
+                                    var type = $('#type').val();
                                     var city = this.name;
                                     var filter = [];
                                         filter['CTA'] = "' AND SUBSTRING(customer from 1 for 3) IN('CTA','PNI','ATT','BCU','AUC') ";
@@ -51,7 +51,8 @@
                                     var where = "status = 'closed successful' AND closetime >= '" + firstDate + "' AND closetime <= '" + lastDate + filter[city] ;
 
                                     $.post( "ticketlist", 
-                                            { where: where } ).done(function( data ) {
+                                            { where: where,
+                                              type: type } ).done(function( data ) {
                                         $('#logTicket').html(data);  
                                     });                                           
 

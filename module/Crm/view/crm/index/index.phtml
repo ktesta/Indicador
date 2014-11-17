@@ -13,8 +13,7 @@
               <!-- Logo ends -->
             </div>
 
-            <!-- Button section -->
-            <div class="col-md-4">        
+            <div class="col-md-6">        
 
               <div class="form-inline" role="form">
                 <div class="form-group">
@@ -25,12 +24,24 @@
                   <h4>Data Final</h4>
                     <input id="lastDate" type="text" class="form-control filter-data" value="<?php echo $this->lastDate; ?>">
                 </div>
+                <div class="form-group">
+                  <h4>Tipo do Ticket</h4>
+                    <select id="type" class="filter-data" multiple="multiple">
+                      <option value="Reclamação" >Reclamação</option>
+                      <option value="Defeito" >Defeito</option>
+                      <option value="Informação">Informação</option>
+                      <option value="Solicitação">Solicitação</option>
+                      <option value="Alteração">Alteração</option>
+                      <option value="Desconexão">Desconexão</option>
+                      <option value="Cobrança">Cobrança</option>
+                  </select>
+                </div>
               </div>
 
             </div>
-              <div id="col-md-4" >
+              <div id="col-md-2" >
                 <b>Base de dados: OTRS do CRM. <br>
-                Última atualização: <?php echo date('d/m/Y') ?> </b>
+                Última atualização: <?php echo date('d/m/Y') ?>. </b>
               </div>
           </div>
         </div>
@@ -74,6 +85,14 @@
     date();
     filter();
 
+    $(function() {
+        $('#type').change(function() {
+            console.log($(this).val());
+        }).multipleSelect({
+            width: '200px',      
+        });
+    });
+
   });
 
   $('.filter-data').change(function(){
@@ -94,10 +113,12 @@
 
       var firstDate = $('#firstDate').val();
       var lastDate = $('#lastDate').val();
+      var type = $('#type').val();
 
       var value = { 
         firstDate: firstDate,
         lastDate: lastDate,
+        type: type
       }
 
       post("volumemes", "#graph", value);

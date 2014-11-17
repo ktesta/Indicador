@@ -13,10 +13,9 @@ class IndexTicket
             'driver'         => 'Pdo',
             'dsn'            => 'mysql:dbname=oss;host=10.100.0.3',
             'username'       => 'qep',
-            'password'       => 'ririgoni',
+            'password'       => 'ririgoni',       
             )
         );
-        
         return $db;
     }
 
@@ -145,6 +144,40 @@ class IndexTicket
                 GROUP BY causa
                 ORDER BY total DESC 
                 LIMIT 10";
+
+        $stmt = $db->query($sql);
+        $results = $stmt->execute();
+        
+        return $results;
+
+    }
+
+    public function volumeAcionamento($filter)
+    {   
+
+        $firstDate = $filter['filter']['firstDate'];
+        $lastDate = $filter['filter']['lastDate'];
+
+        $db = $this->connection();
+
+        $sql = "SELECT 
+                    COUNT(*) AS volumeacionamento,
+                    (SELECT 
+                        COUNT(*) 
+                    FROM otrs_ticket_summary 
+                    WHERE 
+                    type = 'incident' AND 
+                    ts = 'closed successful' AND 
+                    closetime >= '$firstDate' AND 
+                    closetime <= '$lastDate') as volumetotal
+                FROM otrs_ticket_summary 
+                WHERE 
+                    type = 'incident' AND 
+                    ts = 'closed successful' AND 
+                    closetime >= '$firstDate' AND 
+                    closetime <= '$lastDate' AND 
+                    (forjintel+constel+httcuritiba+httmaua+httosasco) > 0
+                ";
 
         $stmt = $db->query($sql);
         $results = $stmt->execute();
