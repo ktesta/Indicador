@@ -60,8 +60,8 @@ class IndexTicket
                 FROM crm_otrs_ticket_summary 
                 WHERE 
                     status = 'closed successful' AND 
-                    closetime >= '$firstDate' AND 
-                    closetime <= '$lastDate' 
+                    closetime >= '$firstDate 00:00:00' AND 
+                    closetime <= '$lastDate 23:59:59' 
                     $sqlType
                 GROUP BY 
                     to_char(to_timestamp (EXTRACT(month from closetime)::text, 'MM'), 'TMmon') || '/' || EXTRACT(YEAR from closetime) , closeMonth, closeYear 
@@ -77,8 +77,8 @@ class IndexTicket
                     extract(year from opentime) AS openYear 
                 FROM crm_otrs_ticket_summary 
                 WHERE                     
-                    opentime >= '$firstDate' AND 
-                    opentime <= '$lastDate' 
+                    opentime >= '$firstDate 00:00:00' AND 
+                    opentime <= '$lastDate 23:59:59' 
                     $sqlType
                 GROUP BY 
                     to_char(to_timestamp (EXTRACT(month from opentime)::text, 'MM'), 'TMmon') || '/' || EXTRACT(YEAR from opentime) , openMonth, openYear 
@@ -108,8 +108,8 @@ class IndexTicket
                 FROM crm_otrs_ticket_summary 
                 WHERE 
                     status = 'closed successful' AND 
-                    closetime >= '$firstDate' AND 
-                    closetime <= '$lastDate'
+                    closetime >= '$firstDate 00:00:00' AND 
+                    closetime <= '$lastDate 23:59:59' 
                     $sqlType
                 GROUP BY DATE(closetime) 
                 ORDER BY closetime ASC";
@@ -122,8 +122,8 @@ class IndexTicket
                     DATE(opentime) AS opentime 
                 FROM crm_otrs_ticket_summary 
                 WHERE 
-                    opentime >= '$firstDate' AND 
-                    opentime <= '$lastDate'
+                    opentime >= '$firstDate 00:00:00' AND 
+                    opentime <= '$lastDate 23:59:59' 
                     $sqlType
                 GROUP BY DATE(opentime) 
                 ORDER BY opentime ASC";
@@ -153,8 +153,8 @@ class IndexTicket
                 FROM crm_otrs_ticket_summary 
                 WHERE 
                     status = 'closed successful' AND 
-                    closetime >= '$firstDate' AND 
-                    closetime <= '$lastDate' 
+                    closetime >= '$firstDate 00:00:00' AND 
+                    closetime <= '$lastDate 23:59:59' 
                     $sqlType
                 GROUP BY type";
 
@@ -182,14 +182,14 @@ class IndexTicket
                     WHERE 
                         tratamento_tecnico + binario > 0 and 
                         status = 'closed successful' and 
-                        closetime >= '$firstDate' and 
-                        closetime <= '$lastDate'
+                        closetime >= '$firstDate 00:00:00' AND 
+                        closetime <= '$lastDate 23:59:59' 
                         $sqlType ) AS volumeAcionamento                         
                 FROM crm_otrs_ticket_summary 
                 WHERE 
                     status = 'closed successful' AND 
-                    closetime >= '$firstDate' AND 
-                    closetime <= '$lastDate'
+                    closetime >= '$firstDate 00:00:00' AND 
+                    closetime <= '$lastDate 23:59:59' 
                     $sqlType ";
 
         $stmt = $db->query($sql);
@@ -214,8 +214,8 @@ class IndexTicket
                 FROM crm_otrs_ticket_summary 
                 WHERE 
                     status = 'closed successful' AND 
-                    closetime >= '$firstDate' AND 
-                    closetime <= '$lastDate'
+                    closetime >= '$firstDate 00:00:00' AND 
+                    closetime <= '$lastDate 23:59:59' 
                     $sqlType
                 GROUP BY city ";
 
@@ -241,8 +241,8 @@ class IndexTicket
                 FROM crm_otrs_ticket_summary 
                 WHERE 
                     status = 'closed successful' AND 
-                    closetime >= '$firstDate' AND 
-                    closetime <= '$lastDate' AND 
+                    closetime >= '$firstDate 00:00:00' AND 
+                    closetime <= '$lastDate 23:59:59' AND 
                     causa <> ''
                     $sqlType
                 GROUP BY causa 
@@ -270,8 +270,8 @@ class IndexTicket
                 FROM crm_otrs_ticket_summary 
                 WHERE 
                     status = 'closed successful' AND 
-                    closetime >= '$firstDate' AND 
-                    closetime <= '$lastDate'
+                    closetime >= '$firstDate 00:00:00' AND 
+                    closetime <= '$lastDate 23:59:59' 
                     $sqlType
                 GROUP BY tmatotal ";
 

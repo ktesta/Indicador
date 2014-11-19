@@ -39,8 +39,8 @@
                     point: {
                             events: {
                                 click: function () {
-                                    var firstDate = $('#firstDate').val();
-                                    var lastDate = $('#lastDate').val();
+                                    var firstDate = $('#firstDate').val() + ' 00:00:00';
+                                    var lastDate = $('#lastDate').val() + ' 23:59:59';
                                     var type = $('#type').val();
                                     var city = this.name;
                                     var filter = [];

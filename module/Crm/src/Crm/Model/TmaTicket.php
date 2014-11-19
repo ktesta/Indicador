@@ -60,8 +60,8 @@ class TmaTicket
                 FROM crm_otrs_ticket_summary 
                 WHERE 
                     status = 'closed successful' AND 
-                    closetime >= '$firstDate' AND 
-                    closetime <= '$lastDate' 
+                    closetime >= '$firstDate 00:00:00' AND 
+                    closetime <= '$lastDate 23:59:59'  
                     $sqlType
                 GROUP BY tmatotal ";
 
@@ -86,8 +86,8 @@ class TmaTicket
                 FROM crm_otrs_ticket_summary 
                 WHERE 
                     status = 'closed successful' AND 
-                    closetime >= '$firstDate' AND 
-                    closetime <= '$lastDate' AND 
+                    closetime >= '$firstDate 00:00:00' AND 
+                    closetime <= '$lastDate 23:59:59'  AND 
                     tratamento_tecnico + binario > 0
                     $sqlType
                 GROUP BY tmatotal ";
@@ -113,8 +113,8 @@ class TmaTicket
                 FROM crm_otrs_ticket_summary 
                 WHERE 
                     status = 'closed successful' AND 
-                    closetime >= '$firstDate' AND 
-                    closetime <= '$lastDate' AND 
+                    closetime >= '$firstDate 00:00:00' AND 
+                    closetime <= '$lastDate 23:59:59'  AND 
                     (tratamento_tecnico + binario) = 0
                     $sqlType
                 GROUP BY tmatotal ";
@@ -140,8 +140,8 @@ class TmaTicket
                 FROM crm_otrs_ticket_summary 
                 WHERE 
                     status = 'closed successful' AND 
-                    closetime >= '$firstDate' AND 
-                    closetime <= '$lastDate' AND 
+                    closetime >= '$firstDate 00:00:00' AND 
+                    closetime <= '$lastDate 23:59:59'  AND 
                     tma_total_atendimento <> ''
                     $sqlType
                 GROUP BY tma_total_atendimento ";
@@ -167,8 +167,8 @@ class TmaTicket
                 FROM crm_otrs_ticket_summary 
                 WHERE 
                     status = 'closed successful' AND 
-                    closetime >= '$firstDate' AND 
-                    closetime <= '$lastDate' AND 
+                    closetime >= '$firstDate 00:00:00' AND 
+                    closetime <= '$lastDate 23:59:59'  AND 
                     tma_total_atendimento_tecnico <> ''
                     $sqlType
                 GROUP BY tma_total_atendimento_tecnico ";

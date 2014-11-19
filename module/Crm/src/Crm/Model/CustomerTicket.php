@@ -60,8 +60,8 @@ class CustomerTicket
                 FROM crm_otrs_ticket_summary 
                 WHERE 
                     status = 'closed successful' AND 
-                    closetime >= '$firstDate' AND 
-                    closetime <= '$lastDate' 
+                    closetime >= '$firstDate 00:00:00' AND 
+                    closetime <= '$lastDate 23:59:59'  
                     $sqlType 
                 GROUP BY customer
                 ORDER BY volume DESC
@@ -89,8 +89,8 @@ class CustomerTicket
                 FROM crm_otrs_ticket_summary 
                 WHERE 
                     status = 'closed successful' AND 
-                    closetime >= '$firstDate' AND 
-                    closetime <= '$lastDate' 
+                    closetime >= '$firstDate 00:00:00' AND 
+                    closetime <= '$lastDate 23:59:59' 
                     $sqlType 
                 GROUP BY service, customer_name
                 ORDER BY volume DESC
@@ -118,8 +118,8 @@ class CustomerTicket
                 FROM crm_otrs_ticket_summary 
                 WHERE 
                     status = 'closed successful' AND 
-                    closetime >= '$firstDate' AND 
-                    closetime <= '$lastDate' AND 
+                    closetime >= '$firstDate 00:00:00' AND 
+                    closetime <= '$lastDate 23:59:59'  AND 
                     product <> '' 
                     $sqlType 
                 GROUP BY product
