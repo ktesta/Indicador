@@ -94,15 +94,15 @@ class AppController extends AbstractActionController
             $ldap= new Ldap($connectLdap);            
             
             $result = $ldap->search("(&(objectclass=posixGroup)(memberuid=$user) )"  );
+
             foreach ($result as $item) {
                 $groups[] = $item['cn'][0];
             }
 
-            if (preg_grep('/^(OSS|QEP|NOC SN2)$/', $groups)) {
+            if (preg_grep('/^(OSS|QEP|NOC SN2|CRM Supervisao)$/', $groups)) {
                 $user = $ldap->getEntry($username);
                 $auth->getStorage()->write($user);               
 
-                
                 $username = $user['cn'][0];
                 $ticketList = $this->getTables('Crm\Model\App')->log($username);
 
