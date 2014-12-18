@@ -5,7 +5,7 @@
     <table class="table table-striped " cellspacing="0" width="100%" id="data-table" >
       <thead>
         <tr>
-          <th>ID</th>
+          <th>Ticket</th>
           <th>Tipo</th> 
           <th>Título</th>
           <th>Abertura</th> 
@@ -13,6 +13,7 @@
           <th>Nome do Cliente</th>
           <th>Causa</th>
           <th>Solução</th>
+          <th>Service</th>
         </tr>
       </thead>
       <tbody style="font-size: 13px;"> 
@@ -30,6 +31,7 @@
             <td><?php echo $ticket['customer_name'];?></td>  
             <td><?php echo $ticket['causa'];?></td>  
             <td><?php echo $ticket['solucao'];?></td>   
+            <td><?php echo $ticket['service'];?></td>     
           </tr>
         <?php endforeach; ?>
       </tbody>
@@ -42,10 +44,12 @@
 <script type="text/javascript">
 /* Data tables */
   $(document).ready(function() {
-    $('#data-table').dataTable({
+    var table =$('#data-table').dataTable({
        "sPaginationType": "full_numbers",
 
     });
+
+    
   });
  
 </script>

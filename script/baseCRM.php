@@ -48,7 +48,11 @@ function main()
 				<th>outros</th>
 				<th>timeTotal</th> 
 				<th>openBy</th> 
-				<th>closeBy</th> 
+				<th>closeBy</th>
+				<th>timeTicket</th>
+				<th>causa</th>
+				<th>solucao</th> 
+				<th>customerName</th> 
 				";
 	
 
@@ -82,7 +86,7 @@ function main()
 
 		
 			$list .= "<tr>";
-			$list .= "<td>".$tn."</td>";
+			$list .= "<td>".$tn.".</td>";
 			$list .= "<td>".$title."</td>";	
 			$list .= "<td>".$customer_id."</td>";	
 			$list .= "<td>".$customer_user_id."</td>";
@@ -104,6 +108,7 @@ function main()
 			$list .= "<td>".$tmaTotal."</td>";
 			$list .= "<td>".$causa."</td>";
 			$list .= "<td>".$solucao."</td>";
+			$list .= "<td>".$customerData."</td>";
 			$list .= "</tr>";
 		
 	
@@ -168,7 +173,7 @@ function main()
 			insert($ticket); //inserindo na base dos indicadores
 	}
 
-	//$list .= "</table>";
+	$list .= "</table>";
 	//echo $list;
 }
 
