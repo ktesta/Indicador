@@ -1,0 +1,128 @@
+
+
+<div class="col-md-6">
+  <div class="widget">
+    <div class="widget-head">
+      <div class="pull-left"></div>
+      <div class="widget-icons pull-right">
+        <a href="#" class="wminimize"><i class="fa fa-chevron-up"></i></a> 
+        <a href="#" class="wclose"><i class="fa fa-times"></i></a>
+      </div>  
+      <div class="clearfix"></div>
+    </div>             
+    <div class="widget-content">
+      <div class="padd">
+        <div id="volumeAcioAreaAfeta"></div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+<?php 
+    if ( $this->values != 0 ):
+?>   
+
+<script type="text/javascript">
+
+    $('#volumeAcioAreaAfeta').highcharts({
+      chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Tempo por área - Afeta serviço'
+        },
+        xAxis: {
+            categories: [<?php echo $legend; ?>]
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Volume'
+            },
+            stackLabels: {
+                enabled: true,
+                style: {
+                    fontWeight: 'bold',
+                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                }
+            }
+        },
+        tooltip: {
+            formatter: function () {
+                return '<b>' + this.x + '</b><br/>' +
+                    this.series.name + ': ' + this.y + '<br/>' +
+                    'Total: ' + this.point.stackTotal;
+            }
+        },
+        plotOptions: {
+            column: {
+                stacking: 'normal',
+                dataLabels: {
+                    enabled: true,
+                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                    style: {
+                        textShadow: '0 0 3px black'
+                    }
+                }
+            },
+            series: {
+                    cursor: 'pointer',
+                    point: {
+                            events: {
+                                click: function () {
+
+                                    var legend = { 0: 'constel', 1: 'forjintel', 2: 'httcuritiba', 3: 'httosasco', 4: 'httmaua'};
+                                    var timeArr = { 'Até 4 horas': '>0 AND '+ legend[this.x] + '<= 14400' , 
+                                                    'De 4 a 8 horas': '>14400 AND '+ legend[this.x] + '<= 28800', 
+                                                    'De 8 a 12 horas': '>28800 AND '+ legend[this.x] + '<= 43200', 
+                                                    'Acima de 12 horas': '>43200'};
+
+                                    var firstDate = $('#firstDate').val();
+                                    var lastDate = $('#lastDate').val();
+                                    var where = "type = 'Incident' AND ts = 'closed successful' AND closetime >= '" + firstDate + "' AND closetime <= '" + lastDate + "' AND service_affected = 'Sim' AND " + legend[this.x] + timeArr[this.series.name];
+
+                                    $.post( "ticketlist", 
+                                            { where: where } ).done(function( data ) {
+                                        $('#logTicket').html(data);  
+                                    });                                           
+
+                                    $('#myModal').modal('show');
+                                }
+                            }
+                    }
+            },
+        },
+        series: [
+            {
+                color: '#228B22',
+                name: 'Até 4 horas',
+                data: [<?php echo $valuesGraph[1] ?>]
+            }, {
+                color: '#E6DC22',
+                name: 'De 4 a 8 horas',
+                data: [<?php echo $valuesGraph[2] ?>]
+            }, {
+                color: '#F79D01',
+                name: 'De 8 a 12 horas',
+                data: [<?php echo $valuesGraph[3] ?>]
+            }, {
+                color: '#B22222',
+                name: 'Acima de 12 horas',
+                data: [<?php echo $valuesGraph[4] ?>]
+            }
+        ]
+    });
+  
+</script>
+
+<?php 
+    else :
+?>
+<script type="text/javascript">
+        
+        $('#volumeAcioAreaAfeta').html('<h3 align="center"><i>Não há dados para exibir o gráfico "Volume de tickets x Área - Afeta serviço". Por favor, altere os filtros.</i></h3>');
+
+</script>
+<?php
+    endif
+?>

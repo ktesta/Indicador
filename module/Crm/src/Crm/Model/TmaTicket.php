@@ -99,6 +99,33 @@ class TmaTicket
        
     }
 
+    public function totalTimeAcionamento2($filter)
+    {   
+        $firstDate = $filter['filter']['firstDate'];
+        $lastDate = $filter['filter']['lastDate'];
+        $sqlType = $this->app->filterType($filter);        
+
+        $db = $this->connection();
+
+        $sql = "SELECT 
+                    COUNT(*) AS total, 
+                    time_causa_note
+                FROM crm_otrs_ticket_summary 
+                WHERE 
+                    status = 'closed successful' AND 
+                    closetime >= '$firstDate 00:00:00' AND 
+                    closetime <= '$lastDate 23:59:59'  AND 
+                    tratamento_tecnico + binario > 0 
+                    $sqlType
+                GROUP BY time_causa_note ";
+
+        $stmt = $db->query($sql);
+        $results = $stmt->execute();
+        
+        return $results;
+       
+    }
+
     public function totalTimeAtendimento($filter)
     {   
         $firstDate = $filter['filter']['firstDate'];

@@ -127,6 +127,32 @@ class TmaController extends AbstractActionController
         return $viewModel;
     }
 
+    public function totalTimeAcionamento2Action(){
+
+        $request = $this->getRequest();
+        $postData = $request->getPost()->toArray();
+
+        $volumeTicket = $this->getTables('Crm\Model\TmaTicket')->totalTimeAcionamento2($postData);
+
+        $valuesGraph = NULL;
+        $values = NULL;
+        foreach ($volumeTicket as $data) {
+            $legend = $data['time_causa_note'];
+            $values = $data['total'];
+
+            $valuesGraph .= "['".$legend."',".$values."],";
+        }
+        
+        $viewModel = new ViewModel(array(
+            'valuesGraph' => $valuesGraph ,
+            'values' => $values
+        ));
+
+        $viewModel->setTerminal(true);
+
+        return $viewModel;
+    }
+
     public function totalTimeAtendimentoAction(){
 
         $request = $this->getRequest();

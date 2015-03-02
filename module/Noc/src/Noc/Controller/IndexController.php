@@ -103,30 +103,40 @@ class IndexController extends AbstractActionController
 
         $volumeTicket = $this->getTables('Noc\Model\IndexTicket')->ticketsFechadosDia($postData);
 
+        $dayNumber = strtotime( $postData['filter']['lastDate'] ) - strtotime( $postData['filter']['firstDate'] );
+        $dayNumber = floor($dayNumber / (60 * 60 * 24));
+
+        $date = $postData['filter']['firstDate'];
         $legend = NULL;
-        $valuesAffected = NULL;
-        $valuesNotAffected = NULL;
-        $closetime = NULL;
-        foreach ($volumeTicket as $data) {
+        $close = NULL;
+        $open = NULL;
 
-            if( $data['closetime'] != $closetime ){
-                $legend .= "'".$data['closetime']."',";
-            }
+        foreach ($volumeTicket['closeResults'] as $data) {
+            $closeLegend = $data['closetime'];
+            $closeValues[$closeLegend] = $data['total'];
+        }
+
+        foreach ($volumeTicket['openResults'] as $data) {
+            $openLegend = $data['closetime'];
+            $openValues[$openLegend] = $data['total'];
+        }
+
+        for( $i = 0; $i < $dayNumber; $i++ ){
+
+            $date = date('Y-m-d', strtotime("+1 days",strtotime($date)));
+            $closeValues[$date] = (!empty( $closeValues[$date] )) ? $closeValues[$date] : '0';
+            $openValues[$date] = (!empty( $openValues[$date] )) ? $openValues[$date] : '0';
             
-            if ($data['service_affected'] == 'Sim'){
-                $valuesAffected .= $data['total'].",";
-            }else{
-                $valuesNotAffected .= $data['total'].",";
-            }
-
-            $closetime = $data['closetime'];
+            $legend .= "'" . $date . "',";
+            $close .= $closeValues[$date] . ",";  
+            $open .= $openValues[$date] . ",";  
 
         }
-        
+
         $viewModel = new ViewModel(array(
             'legend' => $legend,
-            'valuesAffected' => $valuesAffected,
-            'valuesNotAffected' => $valuesNotAffected
+            'close' => $close,
+            'open' => $open,
         ));
 
         $viewModel->setTerminal(true);
@@ -134,6 +144,8 @@ class IndexController extends AbstractActionController
         return $viewModel;
 
     }
+
+    
 
     public function volumeCausaAfetaAction(){
 

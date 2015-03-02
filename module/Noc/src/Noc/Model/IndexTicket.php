@@ -10,10 +10,10 @@ class IndexTicket
     {
         $db = new DbAdapter(
         array(
-            'driver'         => 'Pdo',
-            'dsn'            => 'mysql:dbname=oss;host=10.100.0.3',
-            'username'       => 'qep',
-            'password'       => 'ririgoni',       
+            'driver'        => 'Pdo',
+            'dsn'            => 'pgsql:dbname=oss;host=10.100.0.37',
+            'username'       => 'oss',
+            'password'       => 'httoss',     
             )
         );
         return $db;
@@ -43,18 +43,18 @@ class IndexTicket
 
         $sql = "SELECT 
                     COUNT(*) AS total, 
-                    CONCAT( MONTHNAME(closetime), '/', YEAR(closetime) ) AS closetime, 
-                    MONTH(closetime) AS closeMonth, 
-                    YEAR(closetime) AS closeYear,
+                    EXTRACT('MONTH' FROM closetime::date) || '/' || EXTRACT('YEAR' FROM closetime::date)  AS closetime, 
+                    EXTRACT('MONTH' FROM closetime::date) AS closeMonth, 
+                    EXTRACT('YEAR' FROM closetime::date) AS closeYear,
                     service_affected
                 FROM otrs_ticket_summary
                 WHERE 
-                    type = 'incident' AND 
+                    type = 'Incident' AND 
                     ts = 'closed successful' AND 
                     closetime >= '$firstDate' AND 
                     closetime <= '$lastDate' 
                 GROUP BY 
-                    MONTHNAME(closetime) || '/' || YEAR(closetime) , closeMonth, closeYear, service_affected 
+                    EXTRACT('MONTH' FROM closetime::date) || '/' || EXTRACT('YEAR' FROM closetime::date) , closeMonth, closeYear, service_affected 
                 ORDER BY closeYear ASC, closeMonth ASC";
 
         $stmt = $db->query($sql);
@@ -65,7 +65,6 @@ class IndexTicket
 
     public function ticketsFechadosDia($filter)
     {   
-
         $firstDate = $filter['filter']['firstDate'];
         $lastDate = $filter['filter']['lastDate'];
 
@@ -73,24 +72,42 @@ class IndexTicket
 
         $sql = "SELECT 
                     COUNT(*) AS total, 
-                    CONCAT( DAY(closetime), '/', MONTH(closetime) ) AS closetime, 
-                    DAY(closetime) AS closeDay, 
-                    MONTH(closetime) AS closeMonth,
-                    service_affected
-                FROM otrs_ticket_summary
+                    DATE(closetime) AS closetime 
+                FROM otrs_ticket_summary 
                 WHERE 
-                    type = 'incident' AND 
+                    type = 'Incident' AND 
                     ts = 'closed successful' AND 
-                    closetime >= '$firstDate' AND 
-                    closetime <= '$lastDate' 
-                GROUP BY 
-                    DAY(closetime) || '/' || MONTH(closetime) , closeMonth, closeDay, service_affected 
-                ORDER BY closeMonth ASC, closeDay ASC";
+                    service_affected = 'Sim' AND
+                    closetime >= '$firstDate 00:00:00' AND 
+                    closetime <= '$lastDate 23:59:59' 
+                GROUP BY DATE(closetime) 
+                ORDER BY closetime ASC";
 
         $stmt = $db->query($sql);
-        $results = $stmt->execute();
+        $closeResults = $stmt->execute();
+
+        $sql = "SELECT 
+                    COUNT(*) AS total, 
+                    DATE(closetime) AS closetime 
+                FROM otrs_ticket_summary 
+                WHERE 
+                    type = 'Incident' AND 
+                    ts = 'closed successful' AND 
+                    service_affected = 'Não' AND
+                    closetime >= '$firstDate 00:00:00' AND 
+                    closetime <= '$lastDate 23:59:59' 
+                GROUP BY DATE(closetime) 
+                ORDER BY closetime ASC";
+
+        $stmt = $db->query($sql);
+        $openResults = $stmt->execute();
         
+        $results = Array( 'closeResults' => $closeResults ,
+                          'openResults' => $openResults );
+
         return $results;
+
+
 
     }
 
@@ -107,7 +124,7 @@ class IndexTicket
                     causa  
                 FROM otrs_ticket_summary 
                 WHERE 
-                    type = 'incident' AND 
+                    type = 'Incident' AND 
                     ts = 'closed successful' AND 
                     closetime >= '$firstDate' AND 
                     closetime <= '$lastDate' AND 
@@ -136,11 +153,11 @@ class IndexTicket
                     causa  
                 FROM otrs_ticket_summary 
                 WHERE 
-                    type = 'incident' AND 
+                    type = 'Incident' AND 
                     ts = 'closed successful' AND 
                     closetime >= '$firstDate' AND 
                     closetime <= '$lastDate' AND 
-                    service_affected = 'Nao'
+                    service_affected = 'Não'
                 GROUP BY causa
                 ORDER BY total DESC 
                 LIMIT 10";
@@ -166,13 +183,13 @@ class IndexTicket
                         COUNT(*) 
                     FROM otrs_ticket_summary 
                     WHERE 
-                    type = 'incident' AND 
+                    type = 'Incident' AND 
                     ts = 'closed successful' AND 
                     closetime >= '$firstDate' AND 
                     closetime <= '$lastDate') as volumetotal
                 FROM otrs_ticket_summary 
                 WHERE 
-                    type = 'incident' AND 
+                    type = 'Incident' AND 
                     ts = 'closed successful' AND 
                     closetime >= '$firstDate' AND 
                     closetime <= '$lastDate' AND 

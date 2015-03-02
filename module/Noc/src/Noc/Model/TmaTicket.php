@@ -1,10 +1,11 @@
 <?php
-namespace Crm\Model;
+namespace Noc\Model;
 
 use Zend\Db\Adapter\Adapter as DbAdapter;
 
 class TmaTicket
 {   
+
     public function connection()
     {
         $db = new DbAdapter(
@@ -24,7 +25,7 @@ class TmaTicket
         $db = $this->connection();
 
         $sql = "SELECT * 
-                FROM crm_otrs_ticket_summary 
+                FROM otrs_ticket_summary 
                 WHERE ".
                     $filter['where'] ;
 
@@ -34,102 +35,100 @@ class TmaTicket
         return $results;
     }
 
-    public function totalTime($filter)
-    {   
+    public function totalTime($filter) 
+    {
         $firstDate = $filter['filter']['firstDate'];
         $lastDate = $filter['filter']['lastDate'];
 
         $db = $this->connection();
-
         $sql = "SELECT 
                     COUNT(*) AS total, 
-                    tmatotal 
-                FROM crm_otrs_ticket_summary 
+                    tmatotalstring 
+                FROM otrs_ticket_summary 
                 WHERE 
-                    status = 'closed successful' AND 
-                    closetime >= '$firstDate' AND 
-                    closetime <= '$lastDate'
-                GROUP BY tmatotal ";
+                    type = 'Incident' AND 
+                    ts = 'closed successful' AND 
+                    closetime >= '$firstDate 00:00:00' AND 
+                    closetime <= '$lastDate 23:59:59'  AND 
+                    service_affected = 'Sim'
+                GROUP BY tmatotalstring ";
 
         $stmt = $db->query($sql);
         $results = $stmt->execute();
-        
+
         return $results;
-       
     }
 
-    public function totalTimeAcionamento($filter)
-    {   
+    public function totalTimeNAfeta($filter) 
+    {
         $firstDate = $filter['filter']['firstDate'];
         $lastDate = $filter['filter']['lastDate'];
 
         $db = $this->connection();
-
         $sql = "SELECT 
                     COUNT(*) AS total, 
-                    tmatotal 
-                FROM crm_otrs_ticket_summary 
+                    tmatotalstring 
+                FROM otrs_ticket_summary 
                 WHERE 
-                    status = 'closed successful' AND 
-                    closetime >= '$firstDate' AND 
-                    closetime <= '$lastDate' AND 
-                    tratamento_tecnico + binario > 0
-                GROUP BY tmatotal ";
+                    type = 'Incident' AND 
+                    ts = 'closed successful' AND 
+                    closetime >= '$firstDate 00:00:00' AND 
+                    closetime <= '$lastDate 23:59:59'  AND 
+                    service_affected = 'Não'
+                GROUP BY tmatotalstring ";
 
         $stmt = $db->query($sql);
         $results = $stmt->execute();
-        
+
         return $results;
-       
     }
 
-    public function totalTimeAtendimento($filter)
-    {   
+    public function totalTimeNoc($filter) 
+    {
         $firstDate = $filter['filter']['firstDate'];
         $lastDate = $filter['filter']['lastDate'];
 
         $db = $this->connection();
-
         $sql = "SELECT 
                     COUNT(*) AS total, 
-                    tmatotal 
-                FROM crm_otrs_ticket_summary 
+                    tmatotalnocstring 
+                FROM otrs_ticket_summary 
                 WHERE 
-                    status = 'closed successful' AND 
-                    closetime >= '$firstDate' AND 
-                    closetime <= '$lastDate' AND 
-                    (tratamento_tecnico + binario) = 0
-                GROUP BY tmatotal ";
+                    type = 'Incident' AND 
+                    ts = 'closed successful' AND 
+                    closetime >= '$firstDate 00:00:00' AND 
+                    closetime <= '$lastDate 23:59:59'  AND 
+                    service_affected = 'Sim'
+                GROUP BY tmatotalnocstring ";
 
         $stmt = $db->query($sql);
         $results = $stmt->execute();
-        
+
         return $results;
-       
     }
 
-    public function totalTimeType($filter)
-    {   
+    public function totalTimeNocNAfeta($filter) 
+    {
         $firstDate = $filter['filter']['firstDate'];
         $lastDate = $filter['filter']['lastDate'];
 
         $db = $this->connection();
-
         $sql = "SELECT 
                     COUNT(*) AS total, 
-                    type,
-                    tmatotal 
-                FROM crm_otrs_ticket_summary 
+                    tmatotalnocstring 
+                FROM otrs_ticket_summary 
                 WHERE 
-                    status = 'closed successful' AND 
-                    closetime >= '$firstDate' AND 
-                    closetime <= '$lastDate'
-                GROUP BY tmatotal,type ";
+                    type = 'Incident' AND 
+                    ts = 'closed successful' AND 
+                    closetime >= '$firstDate 00:00:00' AND 
+                    closetime <= '$lastDate 23:59:59'  AND 
+                    service_affected = 'Não'
+                GROUP BY tmatotalnocstring ";
 
         $stmt = $db->query($sql);
         $results = $stmt->execute();
-        
+
         return $results;
-       
     }
+
 }

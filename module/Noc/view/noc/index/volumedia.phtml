@@ -18,7 +18,7 @@
 </div>
         
 <?php 
-    if ( $this->valuesNotAffected != 0 ):
+    if ( /*$this->valuesNotAffected*/1 != 0 ):
 ?>      
 
 <script type="text/javascript">
@@ -62,16 +62,16 @@
                             events: {
                                 click: function () {
                                     var affect = { 
-                                        'Afeta Serviço': 'Sim',
-                                        'Não Afeta Serviço': 'Nao',
+                                        'Afeta serviço': 'Sim',
+                                        'Não afeta serviço': 'Não',
                                     }
                                     var firstDate = $('#firstDate').val();
                                     var lastDate = $('#lastDate').val();
-                                    var where = "ts = 'closed successful' AND type = 'incident' AND CONCAT( DAY(closetime), '/', MONTH(closetime) ) = '" + this.category + "' AND service_affected = '" + affect[this.series.name] + "' AND closetime >= '" + firstDate + "' AND closetime <= '" + lastDate + "' ";
+                                    var where = "ts = 'closed successful' AND type = 'Incident' AND closetime <> '' AND DATE(closetime::date) = '" + this.category + "' AND service_affected = '" + affect[this.series.name] + "' ";
                                     $.post( "ticketlist", 
                                             { where: where } ).done(function( data ) {
                                         $('#logTicket').html(data);  
-                                    });                                           
+                                    });                                        
                                     $('#myModal').modal('show');
                                 }
                             }
@@ -83,9 +83,9 @@
             }
         },
         series: [{
-            color: '#228B22',
-            name: 'Não Afeta Serviço',
-            data: [ <?php echo $this->valuesNotAffected; ?> ],
+            name: 'Afeta serviço',
+            color: '#B22222',
+            data: [ <?php echo $this->close; ?> ],
             dataLabels: {
                     enabled: true,
                     rotation: 0,
@@ -100,10 +100,11 @@
                     }
             }
 
-        }, {
-            color: '#B22222',
-            name: 'Afeta Serviço',
-            data: [ <?php echo $this->valuesAffected; ?> ],
+        },
+        {
+            name: 'Não afeta serviço',
+            color: '#228B22',
+            data: [ <?php echo $this->open; ?> ],
             dataLabels: {
                     enabled: true,
                     rotation: 0,

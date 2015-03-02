@@ -17,6 +17,16 @@ class TmaController extends AbstractActionController
 {   
     
 	protected $crmTicketTable;
+    
+    protected $color = array( 'Até 4 horas'         => '#228B22',
+                              'De 4 a 8 horas'      => '#E6DC22',
+                              'De 8 a 12 horas'     => '#F79D01',
+                              'Acima de 12 horas'   => '#B22222' );
+
+    protected $colorTwo = array( 'Até 1 horas'         => '#228B22',
+                                  'De 1 a 2 horas'      => '#E6DC22',
+                                  'De 2 a 4 horas'     => '#F79D01',
+                                  'Acima de 4 horas'   => '#B22222' );
 
     public function indexAction()
     {
@@ -38,7 +48,7 @@ class TmaController extends AbstractActionController
         $request = $this->getRequest();
         $postData = $request->getPost()->toArray();
 
-        $ticketList = $this->getTables('Crm\Model\TmaTicket')->ticketList($postData, 1, 10);
+        $ticketList = $this->getTables('Noc\Model\TmaTicket')->ticketList($postData, 1, 10);
 
         $viewModel = new ViewModel(array(
             'ticketList' => $ticketList
@@ -60,21 +70,23 @@ class TmaController extends AbstractActionController
         }
     }
 
+
+
     public function totalTimeAction(){
 
         $request = $this->getRequest();
         $postData = $request->getPost()->toArray();
 
-        $volumeTicket = $this->getTables('Crm\Model\TmaTicket')->totalTime($postData);
+        $volumeTicket = $this->getTables('Noc\Model\TmaTicket')->totalTime($postData);
 
         $valuesGraph = NULL;
         foreach ($volumeTicket as $data) {
-            $legend = $data['tmatotal'];
+            $legend = $data['tmatotalstring'];
             $values = $data['total'];
+            $color = $this->color[$legend];
 
-            $valuesGraph .= "['".$legend."',".$values."],";
+            $valuesGraph .= "{name:'".$legend."', y:".$values.", color: '". $color ."'},";
         }
-        
         $viewModel = new ViewModel(array(
             'values' => $valuesGraph ,
         ));
@@ -84,21 +96,22 @@ class TmaController extends AbstractActionController
         return $viewModel;
     }
 
-    public function totalTimeAcionamentoAction(){
+    public function totalTimeNAfetaAction(){
 
         $request = $this->getRequest();
         $postData = $request->getPost()->toArray();
 
-        $volumeTicket = $this->getTables('Crm\Model\TmaTicket')->totalTimeAcionamento($postData);
+        $volumeTicket = $this->getTables('Noc\Model\TmaTicket')->totalTimeNAfeta($postData);
 
         $valuesGraph = NULL;
         foreach ($volumeTicket as $data) {
-            $legend = $data['tmatotal'];
+            $legend = $data['tmatotalstring'];
             $values = $data['total'];
+            $color = $this->color[$legend];
 
-            $valuesGraph .= "['".$legend."',".$values."],";
+            $valuesGraph .= "{name:'".$legend."', y:".$values.", color: '". $color ."'},";
+
         }
-        
         $viewModel = new ViewModel(array(
             'values' => $valuesGraph ,
         ));
@@ -108,21 +121,21 @@ class TmaController extends AbstractActionController
         return $viewModel;
     }
 
-    public function totalTimeAtendimentoAction(){
+    public function totalTimeNocAction(){
 
         $request = $this->getRequest();
         $postData = $request->getPost()->toArray();
 
-        $volumeTicket = $this->getTables('Crm\Model\TmaTicket')->totalTimeAtendimento($postData);
+        $volumeTicket = $this->getTables('Noc\Model\TmaTicket')->totalTimeNoc($postData);
 
         $valuesGraph = NULL;
         foreach ($volumeTicket as $data) {
-            $legend = $data['tmatotal'];
+            $legend = $data['tmatotalnocstring'];
             $values = $data['total'];
+            $color = $this->colorTwo[$legend];
 
-            $valuesGraph .= "['".$legend."',".$values."],";
+            $valuesGraph .= "{name:'".$legend."', y:".$values.", color: '". $color ."'},";
         }
-        
         $viewModel = new ViewModel(array(
             'values' => $valuesGraph ,
         ));
@@ -132,77 +145,27 @@ class TmaController extends AbstractActionController
         return $viewModel;
     }
 
-    public function totalTimeTypeAction(){
+    public function totalTimeNocNAfetaAction(){
 
         $request = $this->getRequest();
         $postData = $request->getPost()->toArray();
 
-        $volumeTicket = $this->getTables('Crm\Model\TmaTicket')->totalTimeType($postData);
+        $volumeTicket = $this->getTables('Noc\Model\TmaTicket')->totalTimeNocNAfeta($postData);
 
-        $arrayOne['Defeito'] = 0;
-        $arrayOne['Solicitação'] = 0;
-        $arrayOne['Reclamação'] = 0;
-        $arrayOne['Informação'] = 0;
-        $arrayOne['Alteração'] = 0;
-        $arrayOne['Desconexão'] = 0;
-        $arrayOne['Cobrança'] = 0;
-
-        $arrayTwo['Defeito']  = 0;
-        $arrayTwo['Solicitação'] = 0;
-        $arrayTwo['Reclamação'] = 0;
-        $arrayTwo['Informação'] = 0;
-        $arrayTwo['Alteração'] = 0;
-        $arrayTwo['Desconexão'] = 0;
-        $arrayTwo['Cobrança'] = 0;
-
-        $arrayThree['Defeito'] = 0;
-        $arrayThree['Solicitação'] = 0;
-        $arrayThree['Reclamação'] = 0;
-        $arrayThree['Informação'] = 0;
-        $arrayThree['Alteração'] = 0;
-        $arrayThree['Desconexão'] = 0;
-        $arrayThree['Cobrança'] = 0;
-
-        $arrayFour['Defeito'] = 0;
-        $arrayFour['Solicitação'] = 0;
-        $arrayFour['Reclamação'] = 0;
-        $arrayFour['Informação'] = 0;
-        $arrayFour['Alteração'] = 0;
-        $arrayFour['Desconexão'] = 0;
-        $arrayFour['Cobrança'] = 0;
-
+        $valuesGraph = NULL;
         foreach ($volumeTicket as $data) {
-            
-            if( $data['tmatotal'] == 'Até 4 horas' || $data['tmatotal'] == 'Fechado na hora da abertura' ){
-                $arrayOne[$data['type']] = $data['total'];
-            }
-            else if( $data['tmatotal'] == 'De 4 a 8 horas'){
-                $arrayTwo[$data['type']] = $data['total'];
-            }
-            else if( $data['tmatotal'] == 'De 8 a 12 horas'){
-                $arrayThree[$data['type']] = $data['total'];
-            }
-            else if( $data['tmatotal'] == 'Acima de 12 horas'){
-                $arrayFour[$data['type']] = $data['total'];
-            }
-        }
+            $legend = $data['tmatotalnocstring'];
+            $values = $data['total'];
+            $color = $this->colorTwo[$legend];
 
-        $valuesOne = $arrayOne['Defeito'].",".$arrayOne['Solicitação'].",".$arrayOne['Reclamação'].",".$arrayOne['Informação'].",".$arrayOne['Alteração'].",".$arrayOne['Desconexão'].",".$arrayOne['Cobrança'];
-        $valuesTwo = $arrayTwo['Defeito'].",".$arrayTwo['Solicitação'].",".$arrayTwo['Reclamação'].",".$arrayTwo['Informação'].",".$arrayTwo['Alteração'].",".$arrayTwo['Desconexão'].",".$arrayTwo['Cobrança'];
-        $valuesThree = $arrayThree['Defeito'].",".$arrayThree['Solicitação'].",".$arrayThree['Reclamação'].",".$arrayThree['Informação'].",".$arrayThree['Alteração'].",".$arrayThree['Desconexão'].",".$arrayThree['Cobrança'];
-        $valuesFour = $arrayFour['Defeito'].",".$arrayFour['Solicitação'].",".$arrayFour['Reclamação'].",".$arrayFour['Informação'].",".$arrayFour['Alteração'].",".$arrayFour['Desconexão'].",".$arrayFour['Cobrança'];
-        
+            $valuesGraph .= "{name:'".$legend."', y:".$values.", color: '". $color ."'},";
+        }
         $viewModel = new ViewModel(array(
-            'valuesOne' => $valuesOne ,
-            'valuesTwo' => $valuesTwo ,
-            'valuesThree' => $valuesThree ,
-            'valuesFour' => $valuesFour 
+            'values' => $valuesGraph ,
         ));
 
         $viewModel->setTerminal(true);
 
         return $viewModel;
-
     }
-    
 }

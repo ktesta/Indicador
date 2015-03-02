@@ -1,0 +1,97 @@
+<div class="col-md-6">
+  <div class="widget">
+    <div class="widget-head">
+      <div class="pull-left"></div>
+      <div class="widget-icons pull-right">
+        <a href="#" class="wminimize"><i class="fa fa-chevron-up"></i></a> 
+      </div>  
+      <div class="clearfix"></div>
+    </div>             
+    <div class="widget-content">
+      <div class="padd">
+        <div id="volumeForaHC"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<?php 
+    if ( $this->values != 0 ):
+?>       
+
+<script type="text/javascript">
+
+    $('#volumeForaHC').highcharts({
+      chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Fora de horário comercial'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.y} - {point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            series: {
+                    cursor: 'pointer',
+                    point: {
+                            events: {
+                                click: function () {
+                                    var firstDate = $('#firstDate').val();
+                                    var lastDate = $('#lastDate').val();
+                                    var filter = " type = 'Incident' AND ( EXTRACT( dow FROM opentime::timestamp ) IN (0,6) OR EXTRACT( hour FROM opentime::timestamp ) < 8 OR EXTRACT( hour FROM opentime::timestamp ) >= 18 )";
+
+                                    var arrAffect = {'Afeta serviço': 'Sim', 
+                                                     'Não afeta serviço': 'Não' 
+                                                    }
+                                    
+                                    var where = "service_affected = '" + arrAffect[this.name] + "' AND opentime >= '" + firstDate + "00:00:00' AND opentime <= '" + lastDate + "23:59:59' AND " + filter;
+
+                                    $.post( "ticketlist", 
+                                            { where: where } ).done(function( data ) {
+                                        $('#logTicket').html(data);  
+                                    });                                           
+
+                                    $('#myModal').modal('show');
+                                }
+                            }
+                        }
+                },
+            pie: {
+                showInLegend: true,
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.y} - {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    },
+                    connectorColor: 'silver'
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Volume',
+            data: [
+                <?php echo $this->graph; ?>
+            ]
+        }]
+    });
+  
+</script>
+
+<?php 
+    else :
+?>
+<script type="text/javascript">
+        
+        $('#volumeForaHC').html('<h3 align="center"><i>Não há dados para exibir o gráfico "Fora de horário comercial". Por favor, altere os filtros.</i></h3>');
+
+</script>
+<?php
+    endif
+?>
+

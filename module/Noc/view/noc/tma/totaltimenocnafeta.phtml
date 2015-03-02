@@ -1,0 +1,75 @@
+
+<div class="col-md-6">
+  <div class="widget">
+    <div class="widget-head">
+      <div class="pull-left"></div>
+      <div class="widget-icons pull-right">
+        <a href="#" class="wminimize"><i class="fa fa-chevron-up"></i></a> 
+        <a href="#" class="wclose"><i class="fa fa-times"></i></a>
+      </div>  
+      <div class="clearfix"></div>
+    </div>             
+    <div class="widget-content">
+      <div class="padd">
+        <div id="totalTimeNocNAfeta"></div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+
+<script type="text/javascript">
+
+    $('#totalTimeNocNAfeta').highcharts({
+      chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Tempo total de tratamento (NOC) - Não afeta serviço'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.y} - {point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            series: {
+                    cursor: 'pointer',
+                    point: {
+                            events: {
+                                click: function () {
+                                    var firstDate = $('#firstDate').val() + '00:00:00';
+                                    var lastDate = $('#lastDate').val() + '23:59:59';
+                                    var where = "type = 'Incident' AND service_affected = 'Não' AND ts = 'closed successful' AND closetime >= '" + firstDate + "' AND closetime <= '" + lastDate + "' AND tmatotalnocstring = '" + this.name + "'";
+                                    $.post( "ticketlist", 
+                                            { where: where } ).done(function( data ) {
+                                        $('#logTicket').html(data);  
+                                    });                                           
+                                    $('#myModal').modal('show');
+                                }
+                            }
+                        }
+                },
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.y} - {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    },
+                    connectorColor: 'silver'
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Volume',
+            data: [
+                <?php echo $this->values; ?>
+            ]
+        }]
+    });
+  
+</script>

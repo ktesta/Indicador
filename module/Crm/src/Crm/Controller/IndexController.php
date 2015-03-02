@@ -22,11 +22,11 @@ class IndexController extends AbstractActionController
     public function indexAction()
     {   
         $firstDate = date('Y/m/d', strtotime("-10 days")); 
-        $lastDate = date('Y/m/d'); 
+        $lastDate = date('Y/m/d');         
 
         $viewModel = new ViewModel( array(
             'firstDate' => $firstDate, 
-            'lastDate' => $lastDate
+            'lastDate' => $lastDate            
         ));
         return $viewModel; 
     }
@@ -53,7 +53,7 @@ class IndexController extends AbstractActionController
         if (!$this->crmTicketTable){
             $this->crmTicketTable = $this->getServiceLocator()->get($table);
 
-            // return vairavel de classe com service ModelContato
+            // return variavel de classe com service ModelContato
             return $this->crmTicketTable;
         }
     }

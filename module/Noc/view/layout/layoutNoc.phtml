@@ -6,6 +6,7 @@
   $user = $auth->getIdentity();
   $username = $user['cn'][0];
 
+  (!preg_grep('/^(OSS|QEP|NOC SN2|CRM Supervisao)$/', $_SESSION['groups']) ) ? $btnCRM = 'disabled' : $btnCRM = '';
 ?>
 
 
@@ -101,9 +102,9 @@
             </li>
 
             <!-- Sync to server link -->
-            <li class="dropdown dropdown-big">
-              <a href="<?php echo $this->url('crmMain', array('action' => 'index'), null, true); ?>" class="dropdown-toggle" ><span class="label label-primary "><i class="fa fa-signal"></i></span> CRM</a>
-            </li>
+            <li class="dropdown dropdown-big <?php echo $btnCRM ?>">
+                <a href="<?php echo (!$btnCRM != '' ) ? $this->url('crmMain', array('action' => 'index'), null, true) : '#'; ?>" class="dropdown-toggle" ><span class="label label-primary "><i class="fa fa-signal"></i></span> CRM</a>
+              </li>
 
             <!-- Sync to server link -->
             <li class="disabled ">

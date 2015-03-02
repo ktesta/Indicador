@@ -1,0 +1,132 @@
+<div class="mainbar">
+  <header> 
+    <div class="container">
+      <div class="row">
+        <div class="container" >
+          <div id='filter' class="row">
+            <!-- Logo section -->
+            <div class="col-md-4">
+              <!-- Logo. -->
+              <div class="logo">
+                <h1>Indicadores<span class="bold">NOC</span></h1>
+              </div>
+              <!-- Logo ends -->
+            </div>
+
+            <!-- Button section -->
+            <div class="col-md-4">        
+
+              <div class="form-inline" role="form">
+                <div class="form-group">
+                  <h4>Data Inicial</h4>
+                    <input id="firstDate" type="text" class="form-control filter-data" value="<?php echo $this->firstDate; ?>">
+                </div>
+                <div class="form-group">
+                  <h4>Data Final</h4>
+                    <input id="lastDate" type="text" class="form-control filter-data" value="<?php echo $this->lastDate; ?>">
+                </div>
+              </div>
+
+            </div>
+              <div id="col-md-4" >
+                <b>Base de dados: OTRS do NOC. <br>
+                Última atualização: <?php echo $this->lastDate; ?></b>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- Page heading -->
+  <div class="page-head">
+    <h2 class="pull-left"><i class="fa fa-bar-chart-o"></i> Gestão / Geral</h2>
+    <!-- Breadcrumb -->
+    <div class="bread-crumb pull-right">
+      <a href="index.html"><i class="fa fa-home"></i> Home</a> 
+      <!-- Divider -->
+      <span class="divider">/</span> 
+      <a href="#" class="bread-current">Dashboard</a>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+
+    <div class="container">
+      <div class="row">
+        <div id="graph"></div>
+        <div id="graph2"></div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div id="graph3"></div>
+        <div id="graph4"></div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div id="graph5"></div>
+        <div id="graph6"></div>
+      </div>
+    </div>
+
+  <div class="clearfix"></div>
+</div>
+<script type="text/javascript">
+
+  $(document).ready(function(){
+    
+    $('#main-gestao').addClass("open");
+    date();
+    filter();
+
+  });
+
+  $('.filter-data').change(function(){
+    filter();
+  });
+
+  function date(){
+
+    $( "#firstDate" ).datepicker( {dateFormat: 'yy/mm/dd'} );
+    $( "#lastDate" ).datepicker( {dateFormat: 'yy/mm/dd'} );
+   
+  }
+
+
+  function filter(){
+      //Carrega os gráficos de acordo com os filtros
+      //Verifica se há filtros e faz requisição via POST para o Actions
+
+      var firstDate = $('#firstDate').val();
+      var lastDate = $('#lastDate').val();
+
+      var value = { 
+        firstDate: firstDate,
+        lastDate: lastDate,
+      }
+
+      post("ticketsdia", "#graph", value);
+      post("volumeaberto", "#graph2", value);
+      post("volumefechado", "#graph3", value);
+      post("ticketshc", "#graph4", value);
+      post("volumehc", "#graph5", value);
+      post("volumeforahc", "#graph6", value);
+      
+      
+  }
+
+  function post(url, div, filter){
+
+    $.post( url, 
+            { filter: filter } ).done(function( data ) {
+        $(div).html(data);                  
+    });
+  }
+
+
+
+
+</script>
+

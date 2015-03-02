@@ -32,8 +32,8 @@ class Module
     {
         //ini_set('display_startup_errors',false);
         //ini_set('display_errors',false);
-        $this->initSession();
-       
+        $this->initSession();       
+        
         $eventManager        = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
@@ -64,7 +64,7 @@ class Module
         else  {
             $time = time() - $_SESSION['date'];
 
-            if( $time > 1800 ){
+            if( $time > 3200 ){
                 $auth = new AuthenticationService();
                 $auth->clearIdentity();
             }
@@ -118,6 +118,7 @@ class Module
             
             $routeMatch = $e->getRouteMatch(); 
 
+            $module = $routeMatch->getMatchedRouteName();
             $controller = $routeMatch->getParam('controller'); //nome do controller 
             $action     = $routeMatch->getParam('action'); //nome da action
             $auth = new AuthenticationService();
@@ -133,6 +134,36 @@ class Module
                     $response->getHeaders()->addHeaderLine('Location', '../app/login');
                     $response->setStatusCode(302);                
                 }
+
+                $groups = $_SESSION['groups'];
+
+                //Permissões de acessos
+
+                //Indicadores CRM
+                if ($module == 'crmMain') {
+                    if ( $preg = preg_grep('/^(OSS|QEP|NOC SN2|CRM Supervisao|CRM Atendimento)$/', $groups)) {
+                        //Okay
+                    } 
+                    else {
+                        $response = $e->getResponse();
+                        $response->getHeaders()->addHeaderLine('Location', '../../noc/index/index');
+                        $response->setStatusCode(302);
+                        //echo 'Permissão negada';
+                    }
+                } 
+
+                //Indicadores NOC
+                if ($module == 'noc/default') {
+                    if ( $preg = preg_grep('/^(OSS|QEP|NOC SN2)$/', $groups)) {
+                        //Okay
+                    } 
+                    else {
+                        $response = $e->getResponse();
+                        $response->getHeaders()->addHeaderLine('Location', '../../crm/index/index');
+                        $response->setStatusCode(302);
+                        //'Permissão negada';
+                    }
+                } 
 
             }
             

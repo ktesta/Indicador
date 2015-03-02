@@ -48,6 +48,7 @@ function main()
 		$servicoAfetado = servicoAfetado( $id );
 		$clienteAfetado = clienteAfetado( $id );
 		$state = state( $id );
+		$tmaTotalString = tmaTotalString($opentime, $closeData['closetime'], null);
 		//$timeState = timeState( $id );
 		( !empty($closeData['closetime']) ? $timeTotal = timeTotal($opentime, $closeData['closetime']) : $timeTotal = 0);
 
@@ -85,6 +86,8 @@ function main()
 
 			$list .= "</tr>";
 		
+		$timeNOC = $timeTotal - ( $constel + $forjintel + $httOCO + $httMUA + $httCTA + $httSJC );
+		$tmaTotalNocString = tmaTotalNocString($timeNOC);
 	
 		 echo $ticket = "INSERT INTO otrs_ticket_summary (
 		 								id,
@@ -111,7 +114,9 @@ function main()
 										causa,
 										solucao,
 										service_affected,
-										customers_affected
+										customers_affected,
+										tmaTotalString,
+										tmaTotalNocString
 									)values (
 										'$id',
 										'$tn', 
@@ -137,7 +142,9 @@ function main()
 										'$causa', 										
 										'$solucao',
 										'$servicoAfetado',
-										'$clienteAfetado'
+										'$clienteAfetado',
+										'$tmaTotalString',
+										'$tmaTotalNocString'
 
 									)";
 			echo "<br>";
@@ -320,6 +327,64 @@ function timeTotal($openDate, $closeDate)
 	$timeTotal = $closeDate - $openDate;
 
 	return $timeTotal;
+}
+
+function tmaTotalString($openDate, $closeDate, $time)
+{	
+	if(!empty($openDate) && !empty($closeDate) ){
+
+		$openDate = strtotime($openDate);
+		$closeDate = strtotime($closeDate);
+
+		$timeTotal = ($closeDate - $openDate) / 3600;
+	}
+	else if( !empty($time) ) {
+		$timeTotal = $time / 3600;
+	}
+	else{
+		return NULL;
+	}
+
+   	if ($timeTotal == 0){
+		$tmaTotal = "FCR";
+	}
+    else if ($timeTotal > 0 && $timeTotal <= 4){
+    	$tmaTotal = "Até 4 horas";
+	}
+    else if ($timeTotal > 4 && $timeTotal <= 8){
+    	$tmaTotal = "De 4 a 8 horas";
+	}
+    else if ($timeTotal > 8 && $timeTotal <= 12){
+    	$tmaTotal = "De 8 a 12 horas";
+	}
+    else{
+    	$tmaTotal = "Acima de 12 horas";
+	}
+
+	return $tmaTotal;
+}
+
+function tmaTotalNocString($time)
+{	
+	$timeTotal = $time / 3600;
+
+   	if ($timeTotal == 0){
+		$tmaTotal = "FCR";
+	}
+    else if ($timeTotal > 0 && $timeTotal <= 1){
+    	$tmaTotal = "Até 1 horas";
+	}
+    else if ($timeTotal > 1 && $timeTotal <= 2){
+    	$tmaTotal = "De 1 a 2 horas";
+	}
+    else if ($timeTotal > 2 && $timeTotal <= 4){
+    	$tmaTotal = "De 2 a 4 horas";
+	}
+    else{
+    	$tmaTotal = "Acima de 4 horas";
+	}
+
+	return $tmaTotal;
 }
 
 function insert($ticket)

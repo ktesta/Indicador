@@ -18,14 +18,13 @@ function main()
 					ticket_priority.name as ticket_priority_id, 
 					ticket_type.name as type_id, 
 					ticket_state.name as ticket_state_id
-
 				FROM ticket 
 				INNER JOIN ticket_type 
 					ON( ticket.type_id = ticket_type.id)
 				INNER JOIN ticket_priority
 					ON( ticket.ticket_priority_id = ticket_priority.id)
 				INNER JOIN ticket_state
-					ON( ticket.ticket_state_id = ticket_state.id)	
+					ON( ticket.ticket_state_id = ticket_state.id) 
 			";
 
 	$query = pg_query($sql); 
@@ -49,18 +48,13 @@ function main()
 				<th>outros</th>
 				<th>timeTotal</th> 
 				<th>openBy</th> 
-				<th>closeBy</th> 
-				<th>nome do cliente</th> 
-				<th>endereço</th> 
-				<th>CEP</th> 
-				<th>cidade</th> 
-				<th>data de ativação</th> 
-				<th>status adm</th> 
-				<th>status operacional</th> 
-				<th>velocidade</th> 
-				<th>causa</th> 
+				<th>closeBy</th>
+				<th>timeTicket</th>
+				<th>causa</th>
 				<th>solucao</th> 
-
+				<th>customerName</th> 
+				<th>tempo até encontrar a causa</th>
+				<th>data que foi colocado a causa</th>
 				";
 	
 
@@ -85,11 +79,17 @@ function main()
 		$openBy = openBy($id); //função que retorna o login de quem abriu o ticket	
 		$timeTotal = timeTotal($create_time, $closeDate); //função que retorna o tempo total do ticket	
 		$queueTime = queueTime($id, $create_time, $closeDate); //função que retorna um array com o tempo por fila do ticket
-		$customerData = customerData($customer_id); //função que retorna um array com os dados do cliente
-		$customerDataCMDB = customerDataCMDB($customer_user_id); //função que retorna um array com os dados do cliente
-		$causa = causa($id); //função que retorna a causa do ticket
-		$solucao = solucao($id); //função que retorna a solução do ticket
+		$tmaTotal = tmaTotal($create_time, $closeDate, null); //função que retorna o tempo total do ticket (por extenso)
+		$tmaTotalAtendimento = tmaTotal( null, null, $queueTime['atendimento'] ); //função que retorna o tempo na fila atendimento do ticket (por extenso)
+		$tmaTotalTratamentoTecnico = tmaTotal( null, null, $queueTime['tratamentoTecnico'] ); //função que retorna o tempo na fila atendimento do ticket (por extenso)
 
+		$arrCausa = causa($id); //função que retorna a causa do ticket
+
+		(!empty($arrCausa['time']) ? $timeHashtagCausa = $arrCausa['time'] : $timeHashtagCausa = $closeDate);
+		$timeTotal2 = tmaTotal($create_time, $timeHashtagCausa, null); //função que retorna o tempo total do ticket por extenso
+
+		$solucao = solucao($id); //função que retorna a solução do ticket
+		$customerData = customerData($customer_id); //função que retorna o nome do cliente
 
 		
 			$list .= "<tr>";
@@ -112,18 +112,15 @@ function main()
 			$list .= "<td>".$timeTotal."</td>";
 			$list .= "<td>".$openBy."</td>";
 			$list .= "<td>".$closeBy."</td>";
-			$list .= "<td>".$customerDataCMDB['nome']."</td>";
-			$list .= "<td>".$customerDataCMDB['end']."</td>";
-			$list .= "<td>".$customerData['zip']."</td>";
-			$list .= "<td>".$customerData['city']."</td>";
-			$list .= "<td>".$customerDataCMDB['datamig']."</td>";
-			$list .= "<td>".$customerDataCMDB['status']."</td>";
-			$list .= "<td>".$customerDataCMDB['operstatus']."</td>";
-			$list .= "<td>".$customerDataCMDB['vel']."</td>";
-			$list .= "<td>".$causa."</td>";
-			$list .= "<td>".$solucao	."</td>";
+			$list .= "<td>".$tmaTotal."</td>";
+			$list .= "<td>".$arrCausa['causa']."</td>";
+			$list .= "<td>".$solucao."</td>";
+			$list .= "<td>".$customerData."</td>";
+			$list .= "<td>".$timeTotal2."</td>";
+			$list .= "<td>".$arrCausa['time']."</td>";
 			$list .= "</tr>";
 		
+	
 	
 		 $ticket = "INSERT INTO crm_otrs_ticket_summary (
 										tn, 
@@ -144,7 +141,15 @@ function main()
 										other,
 										timetotal,
 										openby,
-										closeby
+										closeby,
+										tmatotal,
+										id,
+										causa,
+										time_causa_note,
+										solucao,
+										customer_name,
+										tma_total_atendimento,
+										tma_total_atendimento_tecnico
 									)values (
 										'$tn', 
 										'$title', 
@@ -164,10 +169,18 @@ function main()
 										".$queueTime['other'].",
 										$timeTotal,
 										'$openBy',
-										'$closeBy'
+										'$closeBy',
+										'$tmaTotal',
+										'$id',
+										'".$arrCausa['causa']."',
+										'".$timeTotal2."',
+										'$solucao',
+										'$customerData',
+										'$tmaTotalAtendimento',
+										'$tmaTotalTratamentoTecnico'
 									)";
-			//echo "<br>";
-
+		//	echo "<br>";
+			//echo $ticket;
 			//insert($ticket); //inserindo na base dos indicadores
 	}
 
@@ -303,10 +316,25 @@ function queueTime( $ticket_id, $create_time, $closeDate )
 
 	$currentTime = strtotime($create_time); //Transforma data de abertura do ticket para o tipo time
 	$closeDate = strtotime($closeDate); //Transforma data de fechamento do ticket para o tipo time
-	$queue = 5; //O tempo começa a contar na fila atendimento
+	//$queue = 5; //O tempo começa a contar na fila atendimento
+
+	
+	$sqlAux = "SELECT 
+		create_time,
+		queue_id
+	FROM ticket_history
+	WHERE 
+		history_type_id = 1 and 
+		ticket_id = $ticket_id 
+	ORDER BY create_time ASC ";
+
+	$queryAux = pg_query($sqlAux);
+	$arrayAux = pg_fetch_array($queryAux);
+	$queue = $arrayAux['queue_id']; //Fila inicial do ticket
 
 	while ( $array = pg_fetch_array($query) ) {
 		
+
 		$moveTime = strtotime( $array['create_time'] ); //data em o ticket foi movido de fila
 
 		//Se fila = atendimento
@@ -362,55 +390,49 @@ function timeTotal($openDate, $closeDate)
 	return $timeTotal;
 }
 
-function insert($ticket)
-{
-	include 'PSQL_OSS.php';
-	pg_query($ticket);
-	
-	include 'PSQL_OTRS_CRM.php';
-}
+function tmaTotal($openDate, $closeDate, $time)
+{	
+	if(!empty($openDate) && !empty($closeDate) ){
 
-function delete()
-{
-	include 'PSQL_OSS.php';
-	$sql = "DELETE FROM crm_otrs_ticket_summary";
-	pg_query($sql);
-}
-	
-function customerData($customer_id)
-{
-	$sql = "SELECT  first_name,
-					last_name,
-					street,
-					zip,
-					city
-			FROM customer_user 
-			WHERE 
-				customer_id = '$customer_id' ";
+		$openDate = strtotime($openDate);
+		$closeDate = strtotime($closeDate);
 
-	$query = pg_query($sql);
-	$array = pg_fetch_array($query);
+		$timeTotal = ($closeDate - $openDate) / 3600;
+	}
+	else if( !empty($time) ) {
+		$timeTotal = $time / 3600;
+	}
+	else{
+		//echo "opendate".$openDate;
+		//echo "closedate".$closeDate;
+		//echo 'return bosta ';
+		return 'NULL';
+	}
 
-	$firstname = $array['first_name'];
-	$lastname = $array['last_name'];
-	$street = $array['street'];
-	$zip = $array['zip'];
-	$city = $array['city'];
+	//echo "timetotal:".$timeTotal;
 
-	$data = Array(
-			'firstname' => $firstname,
-			'lastname' => $lastname,
-			'street' => $street,
-			'zip' => $zip,
-			'city' => $city
-		); //array com os valores os dados do cliente
-
-	return $data;
+   	if ($timeTotal <= 0){
+		$tmaTotal = "FCR";
+	}
+    else if ($timeTotal > 0 && $timeTotal <= 4){
+    	$tmaTotal = "Até 4 horas";
+	}
+    else if ($timeTotal > 4 && $timeTotal <= 8){
+    	$tmaTotal = "De 4 a 8 horas";
+	}
+    else if ($timeTotal > 8 && $timeTotal <= 12){
+    	$tmaTotal = "De 8 a 12 horas";
+	}
+    else{
+    	$tmaTotal = "Acima de 12 horas";
+	}
+	return $tmaTotal;
 }
 
 function causa($ticket_id)
 {
-	$sql = "SELECT a_body 
+	$sql = "SELECT lower (trim ( trim(  trim(both from a_body), '.' ), '#' ) )  as a_body,
+					create_time
 			FROM article
 			WHERE 
 				ticket_id = $ticket_id and  
@@ -420,8 +442,12 @@ function causa($ticket_id)
 
 	$query = pg_query($sql);
 	$array = pg_fetch_array($query);
+	$causa = trim( $array['a_body'] );
+	$time = $array['create_time'];
 
-	return $array['a_body'];
+	$arr = Array( 'causa' => $causa, 'time' => $time );
+
+	return $arr;
 }
 
 function solucao($ticket_id)
@@ -443,47 +469,34 @@ function solucao($ticket_id)
 	return $array['a_body'];
 }
 
-function customerDataCMDB($customer_user_id)
+function customerData($customer_id)
 {
-	include 'MySQL_OSS.php';
-	mysql_query('SET character_set_results=utf8');
-
-	$sql = "SELECT 
-				datamig,
-				statmig,
-				status,
-				operstatus,
-				nome,
-				end,
-				vel
-			FROM customer
+	$sql = "SELECT first_name 
+			FROM customer_user 
 			WHERE 
-				custid = '$customer_user_id' ";
+				customer_id = '$customer_id' ";
+	$query = pg_query($sql);
+	$array = pg_fetch_array($query);
 
-	$query = mysql_query($sql);
-	$array = mysql_fetch_array($query);
-
-	$datamig = $array['datamig'];
-	$statmig = $array['statmig'];
-	$status = $array['status'];
-	$operstatus = $array['operstatus'];
-	$nome = $array['nome'];
-	$end = $array['end'];
-	$vel = $array['vel'];
-
-	$data = Array(
-			'datamig' => $datamig,
-			'statmig' => $statmig,
-			'status' => $status,
-			'operstatus' => $operstatus,
-			'nome' => $nome,
-			'end' => $end,
-			'vel' => $vel
-		); //array com os valores os dados do cliente
-
-	return $data;
-
+	return $array['first_name'];
 }
+
+function insert($ticket)
+{
+	include 'PSQL_OSS.php';
+	pg_query($ticket);
+	
+	include 'PSQL_OTRS_CRM.php';
+}
+
+function delete()
+{
+	include 'PSQL_OSS.php';
+	$sql = "DELETE FROM crm_otrs_ticket_summary";
+	pg_query($sql);
+}
+	
+
 
 	
 ?>

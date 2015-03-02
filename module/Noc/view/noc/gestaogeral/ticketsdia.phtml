@@ -1,0 +1,137 @@
+
+<div class="col-md-6">
+  <div class="widget">
+    <div class="widget-head">
+      <div class="pull-left"></div>
+      <div class="widget-icons pull-right">
+        <a href="#" class="wminimize"><i class="fa fa-chevron-up"></i></a> 
+        <a href="#" class="wclose"><i class="fa fa-times"></i></a>
+      </div>  
+      <div class="clearfix"></div>
+    </div>             
+    <div class="widget-content">
+      <div class="padd">
+        <div id="volumeDia"></div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+<?php 
+    if ( $this->values != 0 ):
+?>      
+
+<script type="text/javascript">
+
+    $('#volumeDia').highcharts({
+         chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Volume de tickets abertos x fechados'
+        },
+        subtitle: {
+            text: ''
+        },
+        xAxis: {
+            categories: [
+                <?php echo $this->legend; ?>
+            ],
+            labels: {
+                rotation: 0,                
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Volume'
+            }
+        },
+        tooltip: {
+            headerFormat: '<b><span style="font-size:12px">Dia {point.key}</span> </b> <br>',
+            pointFormat: '<span style="color:{series.color}">{series.name}: ' +
+                '<b>{point.y:1f} </span></b><br>',
+            footerFormat: '',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            series: {
+                    cursor: 'pointer',
+                    point: {
+                            events: {
+                                click: function () {
+
+                                    var type = { 
+                                        'Tickets abertos': "DATE(opentime) = '" + this.category + "'",
+                                        'Tickets fechados': "closetime like '" + this.category + "%'",
+                                    }
+
+                                    var where = "ts = 'closed successful' AND type = 'Incident' AND " + type[this.series.name] ;
+                                    $.post( "ticketlist", 
+                                            { where: where } ).done(function( data ) {
+                                        $('#logTicket').html(data);  
+                                    });                                        
+                                    $('#myModal').modal('show');
+                                }
+                            }
+                        }
+                },
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: 'Tickets fechados',
+            //color: '#B22222',
+            data: [ <?php echo $this->close; ?> ],
+            dataLabels: {
+                    enabled: true,
+                    rotation: 0,
+                    align: 'center',
+                    x: 0,
+                    y: 0,
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif',
+                        fontWeight: 'bold',
+                        
+                    }
+            }
+
+        },
+        {
+            name: 'Tickets abertos',
+            //color: '#228B22',
+            data: [ <?php echo $this->open; ?> ],
+            dataLabels: {
+                    enabled: true,
+                    rotation: 0,
+                    align: 'center',
+                    x: 0,
+                    y: 0,
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif',
+                        fontWeight: 'bold',
+                        
+                    }
+            }
+
+        },]
+    });
+  
+</script>
+
+<?php 
+    else :
+?>
+<script type="text/javascript">
+        
+        $('#volumeDia').html('<h3 align="center"><i>Não há dados para exibir o gráfico "Volume de tickets abertos x fechados". Por favor, altere os filtros.</i></h3>');
+
+</script>
+<?php
+    endif
+?>

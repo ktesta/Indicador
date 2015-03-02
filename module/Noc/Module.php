@@ -13,9 +13,11 @@ use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Zend\Db\ResultSet\ResultSet;
 
-use Crm\Model\CustomerTicket;
+use Noc\Model\AcionamentoTicket;
 use Noc\Model\IndexTicket;
-use Crm\Model\TmaTicket;
+use Noc\Model\TmaTicket;
+use Noc\Model\Campo;
+use Noc\Model\GestaoGeral;
 use Crm\Model\App;
 
 use Zend\Authentication\AuthenticationService;
@@ -31,6 +33,7 @@ class Module
     {
         //ini_set('display_startup_errors',false);
         //ini_set('display_errors',false);
+        
         $eventManager        = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
@@ -63,12 +66,24 @@ class Module
                      $table = new IndexTicket;
                      return $table;
                  },
-                 'Crm\Model\CustomerTicket' =>  function($sm) {
-                     $table = new CustomerTicket;
+                 'Noc\Model\AcionamentoTicket' =>  function($sm) {
+                     $table = new AcionamentoTicket;
                      return $table;
                  },
-                 'Crm\Model\TmaTicket' =>  function($sm) {
+                 'Noc\Model\TmaTicket' =>  function($sm) {
                      $table = new TmaTicket;
+                     return $table;
+                 },
+                 'Noc\Model\Campo' =>  function($sm) {
+                     $table = new Campo;
+                     return $table;
+                 },
+                 'Noc\Model\GestaoGeral' =>  function($sm) {
+                     $table = new GestaoGeral;
+                     return $table;
+                 },
+                 'Noc\Model\Alarmes' =>  function($sm) {
+                     $table = new Alarmes;
                      return $table;
                  },
                 'Crm\Model\App' =>  function($sm) {

@@ -1,0 +1,103 @@
+commit 08d5e51c931790221b1868649cbe312ee22fe653
+Author: Kevin Testa <ktesta@svlxdev1.mgmt.horizonstelecom.com>
+Date:   Thu Dec 18 11:22:59 2014 -0200
+
+    inclusão do service na ticketList
+
+commit fc212cb14e56baeeb7362a613e2c059fb297e501
+Author: Kevin Testa <ktesta@svlxdev1.mgmt.horizonstelecom.com>
+Date:   Wed Nov 19 15:28:12 2014 -0200
+
+    Permissão de acesso - CRM Atendimento
+
+commit fdbc634f422562d1371044485d4d74cb6c49a1fe
+Author: Kevin Testa <ktesta@svlxdev1.mgmt.horizonstelecom.com>
+Date:   Wed Nov 19 11:44:06 2014 -0200
+
+    filtro - BUG
+
+commit bdd159c40a35444d983c48bbf0e1fdab0ddd53f5
+Author: Kevin Testa <ktesta@svlxdev1.mgmt.horizonstelecom.com>
+Date:   Mon Nov 17 11:42:33 2014 -0200
+
+    opção de filtro por tipo - Geral
+
+commit 75f598043956dfb37715c406d55986936edb8f42
+Author: Kevin Testa <ktesta@svlxdev1.mgmt.horizonstelecom.com>
+Date:   Tue Nov 11 09:47:00 2014 -0200
+
+    calendario
+
+commit 9c7e3f53341c19210e17afcefadeb5320d1b8605
+Author: Kevin Testa <ktesta@svlxdev1.mgmt.horizonstelecom.com>
+Date:   Tue Nov 11 09:23:52 2014 -0200
+
+    Bug Expiração do login / nome do cliente
+
+commit 659e690fe13e6ebf3441adbc1b4e22802c311958
+Author: Kevin Testa <ktesta@svlxdev1.mgmt.horizonstelecom.com>
+Date:   Mon Nov 10 16:29:33 2014 -0200
+
+    Volume por Serviço/ expiração do login
+
+commit 88be1bdb8ad68eab1d30c367cdeae2bfb83132ef
+Author: Kevin Testa <ktesta@svlxdev1.mgmt.horizonstelecom.com>
+Date:   Wed Nov 5 10:13:10 2014 -0200
+
+    Ticket list
+
+commit 0bfdbe0634ce952d461e1f1f7aecd0e61e2fcc27
+Author: Kevin Testa <ktesta@svlxdev1.mgmt.horizonstelecom.com>
+Date:   Wed Nov 5 09:58:17 2014 -0200
+
+    TMA por Fila / Volume de tickets abertos
+
+commit 4d25520e4598b624ff2309a72740357dc961179c
+Author: Kevin Testa <ktesta@svlxdev1.mgmt.horizonstelecom.com>
+Date:   Tue Nov 4 10:21:46 2014 -0200
+
+    Ajustes nos indicadores de TMA
+
+commit e9384cc10b29f2fecbbdbbc44d19bb990aa5b318
+Author: Kevin Testa <ktesta@svlxdev1.mgmt.horizonstelecom.com>
+Date:   Mon Nov 3 17:42:58 2014 -0200
+
+    Inserção do filtro 'tipo'
+
+commit 21d6f0b4b2d5af8eb79ac1d85afc4cf17c171a1f
+Author: Kevin Testa <ktesta@svlxdev1.mgmt.horizonstelecom.com>
+Date:   Mon Nov 3 17:35:58 2014 -0200
+
+    Inserção do filtro 'tipo'
+
+commit 4914003ecb6e4ada1ae470aca9429e506d0a7016
+Author: Kevin Testa <ktesta@svlxdev1.mgmt.horizonstelecom.com>
+Date:   Fri Oct 31 13:26:01 2014 -0200
+
+    	modified:   module/Crm/view/crm/customer/ticketlist.phtml
+    	modified:   module/Crm/view/crm/index/ticketlist.phtml
+    	modified:   module/Crm/view/crm/tma/ticketlist.phtml
+
+commit 2d8eb79f72d5d66684e8787a507bc012e4774dfc
+Author: Kevin Testa <ktesta@svlxdev1.mgmt.horizonstelecom.com>
+Date:   Fri Oct 24 16:38:27 2014 -0200
+
+    Created Index File
+
+commit 8902d2c600db281c5d0ffdd1948c253ebe9583d4
+Author: Kevin Testa <ktesta@svlxdev1.mgmt.horizonstelecom.com>
+Date:   Fri Oct 24 16:35:21 2014 -0200
+
+    Created Index File
+
+commit ed3bb3a4f580aa153e4ef460194ebb9b732475e6
+Author: OSS Git User <oss@horizonstelecom.com>
+Date:   Fri Oct 24 16:29:34 2014 -0200
+
+    Project First Deployment
+
+commit 4c98b69f2a0b1212e58d82fcdfd3f7328cc4fde6
+Author: OSS Git User <oss@horizonstelecom.com>
+Date:   Fri Oct 24 16:28:58 2014 -0200
+
+    First Commit

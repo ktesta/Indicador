@@ -58,11 +58,11 @@
                                 click: function () {
                                     var affect = { 
                                         'Afeta Serviço': 'Sim',
-                                        'Não Afeta Serviço': 'Nao',
+                                        'Não Afeta Serviço': 'Não',
                                     }
                                     var firstDate = $('#firstDate').val();
                                     var lastDate = $('#lastDate').val();
-                                    var where = "ts = 'closed successful' AND type = 'incident' AND CONCAT( MONTHNAME(closetime), '/', YEAR(closetime) ) = '" + this.category + "' AND service_affected = '" + affect[this.series.name] + "' AND closetime >= '" + firstDate + "' AND closetime <= '" + lastDate + "' ";
+                                    var where = "ts = 'closed successful' AND type = 'Incident' AND EXTRACT('MONTH' FROM closetime::date) || '/' || EXTRACT('YEAR' FROM closetime::date) = '" + this.category + "' AND service_affected = '" + affect[this.series.name] + "' AND closetime >= '" + firstDate + "' AND closetime <= '" + lastDate + "' ";
                                                  
                                     $.post( "ticketlist", 
                                             { where: where } ).done(function( data ) {

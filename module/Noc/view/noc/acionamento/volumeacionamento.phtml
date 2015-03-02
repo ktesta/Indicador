@@ -1,0 +1,95 @@
+<div class="col-md-6">
+  <div class="widget">
+    <div class="widget-head">
+      <div class="pull-left"></div>
+      <div class="widget-icons pull-right">
+        <a href="#" class="wminimize"><i class="fa fa-chevron-up"></i></a> 
+      </div>  
+      <div class="clearfix"></div>
+    </div>             
+    <div class="widget-content">
+      <div class="padd">
+        <div id="volumeAcionamento"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<?php 
+    if ( $this->values != 0 ):
+?>       
+
+<script type="text/javascript">
+
+    $('#volumeAcionamento').highcharts({
+      chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Volume de acionamentos'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.y} - {point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            series: {
+                    cursor: 'pointer',
+                    point: {
+                            events: {
+                                click: function () {
+                                    var firstDate = $('#firstDate').val();
+                                    var lastDate = $('#lastDate').val();
+                                    var acionamento = '(forjintel+constel+httcuritiba+httmaua+httosasco) = 0';
+                                    if(this.name == 'Volume com acionamentos'){
+                                      acionamento = '(forjintel+constel+httcuritiba+httmaua+httosasco) > 0';
+                                    }
+                                    var where = "type = 'Incident' AND ts = 'closed successful' AND closetime >= '" + firstDate + "' AND closetime <= '" + lastDate + "' AND " + acionamento;
+
+                                    $.post( "ticketlist", 
+                                            { where: where } ).done(function( data ) {
+                                        $('#logTicket').html(data);  
+                                    });                                           
+
+                                    $('#myModal').modal('show');
+                                }
+                            }
+                        }
+                },
+            pie: {
+                showInLegend: true,
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.y} - {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    },
+                    connectorColor: 'silver'
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Volume',
+            data: [
+                <?php echo $this->graph; ?>
+            ]
+        }]
+    });
+  
+</script>
+
+<?php 
+    else :
+?>
+<script type="text/javascript">
+        
+        $('#volumeAcionamento').html('<h3 align="center"><i>Não há dados para exibir o gráfico "Volume de acionamentos". Por favor, altere os filtros.</i></h3>');
+
+</script>
+<?php
+    endif
+?>
+

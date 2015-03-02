@@ -98,11 +98,12 @@ class AppController extends AbstractActionController
             foreach ($result as $item) {
                 $groups[] = $item['cn'][0];
             }
+            if ( $preg = preg_grep('/^(OSS|QEP|NOC SN2|CRM Supervisao|CRM Atendimento)$/', $groups)) {
 
-            if (preg_grep('/^(OSS|QEP|NOC SN2|CRM Supervisao)$/', $groups)) {
+                $_SESSION['groups'] = $groups;
+
                 $user = $ldap->getEntry($username);
                 $auth->getStorage()->write($user);               
-
                 $username = $user['cn'][0];
                 $ticketList = $this->getTables('Crm\Model\App')->log($username);
 

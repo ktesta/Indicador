@@ -1,0 +1,115 @@
+
+
+<div class="col-md-6">
+  <div class="widget">
+    <div class="widget-head">
+      <div class="pull-left"></div>
+      <div class="widget-icons pull-right">
+        <a href="#" class="wminimize"><i class="fa fa-chevron-up"></i></a> 
+        <a href="#" class="wclose"><i class="fa fa-times"></i></a>
+      </div>  
+      <div class="clearfix"></div>
+    </div>             
+    <div class="widget-content">
+      <div class="padd">
+        <div id="volumeAberto"></div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+<?php 
+    if ( $this->values != 0 ):
+?>   
+
+<script type="text/javascript">
+
+    $('#volumeAberto').highcharts({
+      chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Volume de tickets abertos x analista'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.y}</b>'
+        },
+        xAxis: {
+            categories: [
+            ],
+            labels: {
+                rotation: 0,                
+            }
+        },
+        plotOptions: {
+            series: {
+                    cursor: 'pointer',
+                    point: {
+                            events: {
+                                click: function () {
+                                    var firstDate = $('#firstDate').val();
+                                    var lastDate = $('#lastDate').val();
+                                    var where = " type = 'Incident' AND opentime >= '" + firstDate + "' AND opentime <= '" + lastDate + "' AND openby = '" + this.name + "'";
+                                    $.post( "ticketlist", 
+                                            { where: where } ).done(function( data ) {
+                                        $('#logTicket').html(data);  
+                                    });                                           
+
+                                    $('#myModal').modal('show');
+                                }
+                            }
+                        }
+                },
+            pie: {
+                showInLegend: true,
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.y} - {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    },
+                    connectorColor: 'silver'
+                }
+            }
+        },
+        series: [{
+            //color: '#B22222',
+            type: 'column',
+            name: 'Volume',
+            data: [
+                <?php echo $this->valuesGraph; ?>
+            ],
+            dataLabels: {
+                    enabled: true,
+                    rotation: 0,
+                    align: 'center',
+                    x: 0,
+                    y: 0,
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif',
+                        fontWeight: 'bold',
+                        
+                    }
+            }        
+
+        }]
+    });
+  
+</script>
+
+<?php 
+    else :
+?>
+<script type="text/javascript">
+        
+        $('#volumeAberto').html('<h3 align="center"><i>Não há dados para exibir o gráfico "Volume de tickets abertos x analista". Por favor, altere os filtros.</i></h3>');
+
+</script>
+<?php
+    endif
+?>

@@ -44,7 +44,7 @@
                                     if(this.name == 'Volume com acionamentos'){
                                       acionamento = '(forjintel+constel+httcuritiba+httmaua+httosasco) > 0';
                                     }
-                                    var where = "type = 'incident' AND ts = 'closed successful' AND closetime >= '" + firstDate + "' AND closetime <= '" + lastDate + "' AND " + acionamento;
+                                    var where = "type = 'Incident' AND ts = 'closed successful' AND closetime >= '" + firstDate + "' AND closetime <= '" + lastDate + "' AND " + acionamento;
 
                                     $.post( "ticketlist", 
                                             { where: where } ).done(function( data ) {

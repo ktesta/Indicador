@@ -73,8 +73,11 @@ return array(
         'invokables' => array(
             'Noc\Controller\Index' => 'Noc\Controller\IndexController',
             'Noc\Controller\App' => 'Noc\Controller\AppController',
-            'Noc\Controller\Customer' => 'Noc\Controller\CustomerController',
-            'Noc\Controller\Tma' => 'Noc\Controller\TmaController'
+            'Noc\Controller\Acionamento' => 'Noc\Controller\AcionamentoController',
+            'Noc\Controller\Tma' => 'Noc\Controller\TmaController',
+            'Noc\Controller\Campo' => 'Noc\Controller\CampoController',
+            'Noc\Controller\Gestaogeral' => 'Noc\Controller\GestaogeralController',
+            'Noc\Controller\Alarmes' => 'Noc\Controller\AlarmesController'
         ),
     ),
     'view_manager' => array(

@@ -6,6 +6,8 @@
     $user = $auth->getIdentity();
     $username = $user['cn'][0];
 
+    (!preg_grep('/^(OSS|QEP|NOC SN2)$/', $_SESSION['groups']) ) ? $btnNOC = 'disabled' : $btnNOC = '';
+
   ?>
 
 
@@ -99,13 +101,13 @@
                 </a>
               </li>
               <!-- Upload to server link. Class "dropdown-big" creates big dropdown -->
-              <li role="button" class=" dropdown dropdown-big disabled"  >
-                <a href="#<?php //echo $this->url('nocMain', array('action' => 'index'), null, true); ?>" class="dropdown-toggle"  ><span class="label label-default"><i class="fa fa-signal"></i></span> NOC</a>
+              <li role="button" class=" dropdown dropdown-big <?php echo $btnNOC ?>"  >
+                <a href="<?php echo (!$btnNOC != '' ) ? $this->url('nocMain', array('action' => 'index'), null, true) : '#'; ?>" class="dropdown-toggle"  ><span class="label label-default"><i class="fa fa-signal"></i></span> NOC</a>
               </li>
 
               <!-- Sync to server link -->
-              <li class="dropdown dropdown-big">
-                <a href="<?php echo $this->url('crmMain', array('action' => 'index'), null, true); ?>" class="dropdown-toggle" ><span class="label label-primary "><i class="fa fa-signal"></i></span> CRM</a>
+              <li class="dropdown dropdown-big ">
+                <a href="<?php echo $this->url('crmMain', array('action' => 'index'), null, true) ?>" class="dropdown-toggle" ><span class="label label-primary "><i class="fa fa-signal"></i></span> CRM</a>
               </li>
 
               <!-- Sync to server link -->

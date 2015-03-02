@@ -80,7 +80,12 @@ function main()
 		$tmaTotal = tmaTotal($create_time, $closeDate, null); //função que retorna o tempo total do ticket (por extenso)
 		$tmaTotalAtendimento = tmaTotal( null, null, $queueTime['atendimento'] ); //função que retorna o tempo na fila atendimento do ticket (por extenso)
 		$tmaTotalTratamentoTecnico = tmaTotal( null, null, $queueTime['tratamentoTecnico'] ); //função que retorna o tempo na fila atendimento do ticket (por extenso)
-		$causa = causa($id); //função que retorna a causa do ticket
+
+		$arrCausa = causa($id); //função que retorna a causa do ticket
+
+		(!empty($arrCausa['time']) ? $timeHashtagCausa = $arrCausa['time'] : $timeHashtagCausa = $closeDate);
+		$timeTotal2 = tmaTotal($create_time, $timeHashtagCausa, null); //função que retorna o tempo total do ticket por extenso
+
 		$solucao = solucao($id); //função que retorna a solução do ticket
 		$customerData = customerData($customer_id); //função que retorna o nome do cliente
 
@@ -106,7 +111,9 @@ function main()
 			$list .= "<td>".$openBy."</td>";
 			$list .= "<td>".$closeBy."</td>";
 			$list .= "<td>".$tmaTotal."</td>";
-			$list .= "<td>".$causa."</td>";
+			$list .= "<td>".$arrCausa['causa']."</td>";
+			$list .= "<td>".$timeTotal2."</td>";
+			$list .= "<td>".$arrCausa['time']."</td>";
 			$list .= "<td>".$solucao."</td>";
 			$list .= "<td>".$customerData."</td>";
 			$list .= "</tr>";
@@ -136,6 +143,7 @@ function main()
 										tmatotal,
 										id,
 										causa,
+										time_causa_note,
 										solucao,
 										customer_name,
 										tma_total_atendimento,
@@ -162,14 +170,15 @@ function main()
 										'$closeBy',
 										'$tmaTotal',
 										'$id',
-										'$causa',
+										'".$arrCausa['causa']."',
+										'".$timeTotal2."',
 										'$solucao',
 										'$customerData',
 										'$tmaTotalAtendimento',
 										'$tmaTotalTratamentoTecnico'
 									)";
-			//echo "<br>";
-
+		//	echo "<br>";
+			//echo $ticket;
 			insert($ticket); //inserindo na base dos indicadores
 	}
 
@@ -392,10 +401,15 @@ function tmaTotal($openDate, $closeDate, $time)
 		$timeTotal = $time / 3600;
 	}
 	else{
-		return NULL;
+		echo "opendate".$openDate;
+		echo "closedate".$closeDate;
+		echo 'return bosta ';
+		return 'NULL';
 	}
 
-   	if ($timeTotal == 0){
+	echo "timetotal:".$timeTotal;
+
+   	if ($timeTotal <= 0){
 		$tmaTotal = "FCR";
 	}
     else if ($timeTotal > 0 && $timeTotal <= 4){
@@ -410,13 +424,13 @@ function tmaTotal($openDate, $closeDate, $time)
     else{
     	$tmaTotal = "Acima de 12 horas";
 	}
-
 	return $tmaTotal;
 }
 
 function causa($ticket_id)
 {
-	$sql = "SELECT lower (trim ( trim(  trim(both from a_body), '.' ), '#' ) )  as a_body
+	$sql = "SELECT lower (trim ( trim(  trim(both from a_body), '.' ), '#' ) )  as a_body,
+					create_time
 			FROM article
 			WHERE 
 				ticket_id = $ticket_id and  
@@ -427,7 +441,11 @@ function causa($ticket_id)
 	$query = pg_query($sql);
 	$array = pg_fetch_array($query);
 	$causa = trim( $array['a_body'] );
-	return $causa;
+	$time = $array['create_time'];
+
+	$arr = Array( 'causa' => $causa, 'time' => $time );
+
+	return $arr;
 }
 
 function solucao($ticket_id)
