@@ -8,7 +8,8 @@
           <th>ID</th>
           <th>Tipo</th> 
           <th>Título</th>
-          <th>Status</th> 
+          <th>Afeta serviço</th> 
+          <th>Abertura</th>
           <th>Fechamento</th>
         </tr>
       </thead>
@@ -22,8 +23,9 @@
             </td>
             <td><?php echo $ticket['ts'];?></td>   
             <td><?php echo $ticket['title'];?></td>   
-            <td><?php echo $ticket['ts'];?></td>   
-            <td><?php echo $ticket['closetime'];?></td>   
+            <td><?php echo $ticket['service_affected'];?></td>   
+            <td><?php echo $ticket['opentime'];?></td>  
+            <td><?php echo $ticket['closetime'];?></td>      
           </tr>
         <?php endforeach; ?>
       </tbody>

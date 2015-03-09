@@ -127,15 +127,15 @@ class GestaogeralController extends AbstractActionController
             'kalberti' => '#488AC7',
             'emessias' => '#488AC7',
             'mbordinhao' => '#488AC7',
+            'agross' => '#488AC7',
             
             'floesch' => 'orange',
             'mcaviglia' => 'orange',
-            'agross' => 'orange',
             'spinheiro' => 'orange',
+            'lrivatto' => 'orange',
 
             'ealves' => 'brown',
             'asantos' => 'brown',
-            'lrivatto' => 'brown',
             'ctoshio' => 'brown',
             'rvaz' => 'brown',
             
