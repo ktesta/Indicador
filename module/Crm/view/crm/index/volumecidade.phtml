@@ -47,6 +47,7 @@
                                         filter['CTA'] = "' AND SUBSTRING(customer from 1 for 3) IN('CTA','PNI','ATT','BCU','AUC') ";
                                         filter['OCO'] = "' AND SUBSTRING(customer from 1 for 3) IN('OCO','BRE')";
                                         filter['MUA'] = "' AND SUBSTRING(customer from 1 for 3) IN('MUA')";
+                                        filter['SJC'] = "' AND SUBSTRING(customer from 1 for 3) IN('SJC')";
 
                                     var where = "status = 'closed successful' AND closetime >= '" + firstDate + "' AND closetime <= '" + lastDate + filter[city] ;
 
@@ -79,7 +80,7 @@
             type: 'pie',
             name: 'Volume',
             data: [
-                <?php echo $this->valuesGraphCTA . $this->valuesGraphOCO . $this->valuesGraphMUA; ?>
+                <?php echo $this->valuesGraphCTA . $this->valuesGraphOCO . $this->valuesGraphMUA . $this->valuesGraphSJC; ?>
             ]
         }]
     });

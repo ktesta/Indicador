@@ -5,7 +5,7 @@ main();
 //Função principal
 function main()
 {		
-	delete(); //deletando todos os registros 
+	//delete(); //deletando todos os registros 
 
 	include 'PSQL_OTRS_NOC.php';
 
@@ -23,8 +23,7 @@ function main()
 					ON (ticket.user_id = users.id) 
 				INNER JOIN ticket_state
 					ON (ticket.ticket_state_id = ticket_state.id)	
-					order by tn desc
-			";
+					order by tn desc ";
 
 	$query = pg_query($sql); 
 
@@ -42,6 +41,7 @@ function main()
 		$ts = $array['ts'];
 		$type = $array['type'];
 		$closeData = closeDate( $id, $opentime );
+		$openData = openData( $id );
 		$causa = causa( $id );
 		$solucao = solucao( $id );
 		$sintomas = sintomas( $id );
@@ -57,7 +57,7 @@ function main()
 			$list .= "<td>".$tn."</td>";
 			$list .= "<td>".$type."</td>";
 			$list .= "<td>".$title."</td>";	
-			$list .= "<td>".$opentime."</td>";	
+			$list .= "<td>".$openData['openby']."</td>";	
 			$list .= "<td>".$closeData['closetime']."</td>";	
 			$list .= "<td>".$openby."</td>";
 			$list .= "<td>".$closeData['closeby']."</td>";		
@@ -149,7 +149,7 @@ function main()
 									)";
 			echo "<br>";
 
-			insert($ticket); //inserindo na base dos indicadores
+			//insert($ticket); //inserindo na base dos indicadores
 	}
 
 	$list .= "</table>";
@@ -248,6 +248,24 @@ function closeDate( $object_id, $openDate )
 				'closetime' => $array['create_time'],
 				'closeby' => $array['closeby'] 
 			);
+
+	return $return;
+}
+
+function openData( $object_id )
+{
+	$sql = "SELECT  users.login as openby
+			FROM ticket_history
+			INNER JOIN users 
+				ON (ticket_history.change_by = users.id)
+			WHERE 
+				ticket_id = $object_id and 
+				history_type_id = 1 ";
+
+	$query = pg_query($sql);
+	$array = pg_fetch_array($query);	
+
+	$return = Array( 'openby' => $array['openby'] );
 
 	return $return;
 }

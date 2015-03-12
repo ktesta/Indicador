@@ -207,6 +207,7 @@ class IndexController extends AbstractActionController
         $volumeCTA = 0;
         $volumeOCO = 0;
         $volumeMUA = 0;
+        $volumeSJC = 0;
         foreach ($volumeTicket as $data) {
 
             $city[] = $data['city'];
@@ -219,20 +220,25 @@ class IndexController extends AbstractActionController
             else if (preg_grep('/MUA/', $city)) {    
                 $volumeMUA = $volumeMUA +  $data['volume'];
             } 
+            else if (preg_grep('/SJC/', $city)) {    
+                $volumeSJC = $volumeSJC +  $data['volume'];
+            } 
             unset($city);
             
         }
 
-        $values = $volumeCTA + $volumeOCO + $volumeMUA;
+        $values = $volumeCTA + $volumeOCO + $volumeMUA + $volumeSJC;
         
         $valuesGraphCTA = "['CTA',".$volumeCTA."],";
         $valuesGraphOCO = "['OCO',".$volumeOCO."],";
-        $valuesGraphMUA = "['MUA',".$volumeMUA."]";
+        $valuesGraphMUA = "['MUA',".$volumeMUA."],";
+        $valuesGraphSJC = "['SJC',".$volumeSJC."]";
         
         $viewModel = new ViewModel(array(
             'valuesGraphCTA' => $valuesGraphCTA ,
             'valuesGraphOCO' => $valuesGraphOCO ,
             'valuesGraphMUA' => $valuesGraphMUA ,
+            'valuesGraphSJC' => $valuesGraphSJC ,
             'values' => $values ,
         ));
 
