@@ -23,11 +23,14 @@ class TmaController extends AbstractActionController
 
         $firstDate = date('Y/m/d', strtotime("-10 days")); 
         $lastDate = date('Y/m/d'); 
+        $types = $this->getTables('Crm\Model\IndexTicket')->types();
 
         $viewModel = new ViewModel( array(
             'firstDate' => $firstDate, 
-            'lastDate' => $lastDate
+            'lastDate' => $lastDate, 
+            'types' => $types            
         ));
+        
         return $viewModel;  
         
     }

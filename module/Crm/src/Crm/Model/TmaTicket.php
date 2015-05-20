@@ -28,6 +28,18 @@ class TmaTicket
         return $db;
     }
 
+    public function types()
+    {
+        $db = $this->connection();
+        
+        $sql = "SELECT type FROM crm_otrs_ticket_summary GROUP BY type";
+        
+        $stmt = $db->query($sql);
+        $results = $stmt->execute();
+
+        return $results;
+    }
+    
     public function ticketList($filter)
     {   
 

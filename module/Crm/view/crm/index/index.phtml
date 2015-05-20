@@ -27,13 +27,11 @@
                 <div class="form-group">
                   <h4>Tipo do Ticket</h4>
                     <select id="type" class="filter-data" multiple="multiple">
-                      <option value="Reclamação" >Reclamação</option>
-                      <option value="Defeito" >Defeito</option>
-                      <option value="Informação">Informação</option>
-                      <option value="Solicitação">Solicitação</option>
-                      <option value="Alteração">Alteração</option>
-                      <option value="Desconexão">Desconexão</option>
-                      <option value="Cobrança">Cobrança</option>
+                      
+                      <?php foreach ($this->types as $type) : ?>
+                        <option value="<?php echo $type['type'] ?>" ><?php echo $type['type'] ?></option>
+                      <?php endforeach ?>  
+
                   </select>
                 </div>
               </div>

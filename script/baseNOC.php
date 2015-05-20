@@ -5,7 +5,7 @@ main();
 //Função principal
 function main()
 {		
-	//delete(); //deletando todos os registros 
+	delete(); //deletando todos os registros 
 
 	include 'PSQL_OTRS_NOC.php';
 
@@ -149,7 +149,7 @@ function main()
 									)";
 			echo "<br>";
 
-			//insert($ticket); //inserindo na base dos indicadores
+			insert($ticket); //inserindo na base dos indicadores
 	}
 
 	$list .= "</table>";

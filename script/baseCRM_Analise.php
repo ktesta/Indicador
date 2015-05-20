@@ -7,25 +7,9 @@ function main()
 {		
 	//delete(); //deletando todos os registros 
 
-	include 'PSQL_OTRS_CRM.php';
+	include 'PSQL_OSS.php';
 
-	$sql = "SELECT  ticket.id,
-					tn, 
-					title, 
-					customer_id, 
-					customer_user_id, 
-					ticket.create_time, 
-					ticket_priority.name as ticket_priority_id, 
-					ticket_type.name as type_id, 
-					ticket_state.name as ticket_state_id
-				FROM ticket 
-				INNER JOIN ticket_type 
-					ON( ticket.type_id = ticket_type.id)
-				INNER JOIN ticket_priority
-					ON( ticket.ticket_priority_id = ticket_priority.id)
-				INNER JOIN ticket_state
-					ON( ticket.ticket_state_id = ticket_state.id) 
-			";
+	$sql = "SELECT  * FROM crm_otrs_ticket_summary ORDER BY closetime desc ";
 
 	$query = pg_query($sql); 
 
@@ -53,8 +37,6 @@ function main()
 				<th>causa</th>
 				<th>solucao</th> 
 				<th>customerName</th> 
-				<th>tempo até encontrar a causa</th>
-				<th>data que foi colocado a causa</th>
 				";
 	
 
@@ -64,33 +46,29 @@ function main()
 		$id = $array['id']; 
 		$tn = $array['tn']; 
 		$title = $array['title'];
-		$customer_id = $array['customer_id'];
-		$customer_user_id = $array['customer_user_id'];
-		$create_time = $array['create_time'];
-		$ticket_priority_id = $array['ticket_priority_id'];
-		$type_id = $array['type_id'];
-		$ticket_state_id = $array['ticket_state_id'];
+		$customer_id = $array['customer'];
+		$customer_user_id = $array['service'];
+		$create_time = $array['opentime'];
+		$ticket_priority_id = $array['priority'];
+		$type_id = $array['type'];
+		$ticket_state_id = $array['status'];
+		$name = $array['customer_name'];
 		
-		$detail = detail($id); //função para selecionar o valor do campo detalhe
-		$product = product($id); //função para selecionar o valor do campo produto	
-		$description = description($id); //função para selecionar o valor do campo descrição
-		$closeDate = closeDate($id, $create_time); //função que retorna a data de fechamento do ticket
-		$closeBy = closeBy($id); //função que retorna o login de quem fechou o ticket
-		$openBy = openBy($id); //função que retorna o login de quem abriu o ticket	
-		$timeTotal = timeTotal($create_time, $closeDate); //função que retorna o tempo total do ticket	
-		$queueTime = queueTime($id, $create_time, $closeDate); //função que retorna um array com o tempo por fila do ticket
-		$tmaTotal = tmaTotal($create_time, $closeDate, null); //função que retorna o tempo total do ticket (por extenso)
-		$tmaTotalAtendimento = tmaTotal( null, null, $queueTime['atendimento'] ); //função que retorna o tempo na fila atendimento do ticket (por extenso)
-		$tmaTotalTratamentoTecnico = tmaTotal( null, null, $queueTime['tratamentoTecnico'] ); //função que retorna o tempo na fila atendimento do ticket (por extenso)
+		$detail = $array['detail']; //função para selecionar o valor do campo detalhe
+		$product = $array['product']; //função para selecionar o valor do campo produto	
+		$description = $array['description']; //função para selecionar o valor do campo descrição
+		$closeDate = $array['closetime']; //função que retorna a data de fechamento do ticket
+		$closeBy = $array['closeby']; //função que retorna o login de quem fechou o ticket
+		$openBy = $array['openby']; //função que retorna o login de quem abriu o ticket	
+		$timeTotal = $array['timetotal']; //função que retorna o tempo total do ticket	
+		// $queueTime = queueTime($id, $create_time, $closeDate); //função que retorna um array com o tempo por fila do ticket
+		$tmaTotal = $array['tmatotal']; //função que retorna o tempo total do ticket (por extenso)
+		$tmaTotalAtendimento = $array['tma_total_atendimento']; //função que retorna o tempo na fila atendimento do ticket (por extenso)
+		$tmaTotalTratamentoTecnico = $array['tma_total_atendimento_tecnico']; //função que retorna o tempo na fila atendimento do ticket (por extenso)
 
-		$arrCausa = causa($id); //função que retorna a causa do ticket
+		$causa = $array['causa']; //função que retorna a causa do ticket
 
-		(!empty($arrCausa['time']) ? $timeHashtagCausa = $arrCausa['time'] : $timeHashtagCausa = $closeDate);
-		$timeTotal2 = tmaTotal($create_time, $timeHashtagCausa, null); //função que retorna o tempo total do ticket por extenso
-
-		$solucao = solucao($id); //função que retorna a solução do ticket
-		$customerData = customerData($customer_id); //função que retorna o nome do cliente
-
+		$solucao = $array['solucao']; //função que retorna a solução do ticket
 		
 			$list .= "<tr>";
 			$list .= "<td>".$tn.".</td>";
@@ -102,83 +80,85 @@ function main()
 			$list .= "<td>".$ticket_priority_id."</td>";
 			$list .= "<td>".$type_id."</td>";
 			$list .= "<td>".$ticket_state_id."</td>";
-			$list .= "<td>".$detail."</td>";
-			$list .= "<td>".$product."</td>";
 			$list .= "<td>".$description."</td>";
-			$list .= "<td>".$queueTime['atendimento']."</td>";
-			$list .= "<td>".$queueTime['tratamentoTecnico']."</td>";
-			$list .= "<td>".$queueTime['binario']."</td>";
-			$list .= "<td>".$queueTime['other']."</td>";
+			$list .= "<td>".$product."</td>";
+			$list .= "<td>".$detail."</td>";
+			$list .= "<td>vazio</td>";
+			$list .= "<td>vazio</td>";
+			$list .= "<td>vazio</td>";
+			$list .= "<td>vazio</td>";
+			// $list .= "<td>".$queueTime['atendimento']."</td>";
+			// $list .= "<td>".$queueTime['tratamentoTecnico']."</td>";
+			// $list .= "<td>".$queueTime['binario']."</td>";
+			// $list .= "<td>".$queueTime['other']."</td>";
 			$list .= "<td>".$timeTotal."</td>";
 			$list .= "<td>".$openBy."</td>";
 			$list .= "<td>".$closeBy."</td>";
 			$list .= "<td>".$tmaTotal."</td>";
-			$list .= "<td>".$arrCausa['causa']."</td>";
+			$list .= "<td>".$causa."</td>";
 			$list .= "<td>".$solucao."</td>";
-			$list .= "<td>".$customerData."</td>";
-			$list .= "<td>".$timeTotal2."</td>";
-			$list .= "<td>".$arrCausa['time']."</td>";
+			$list .= "<td>".$name."</td>";
 			$list .= "</tr>";
 		
 	
 	
-		 $ticket = "INSERT INTO crm_otrs_ticket_summary (
-										tn, 
-										title, 
-										customer, 
-										service, 
-										opentime, 
-										closetime, 
-										priority, 
-										type, 
-										status, 
-										detail, 
-										product, 
-										description, 
-										atendimento, 
-										tratamento_tecnico, 
-										binario,
-										other,
-										timetotal,
-										openby,
-										closeby,
-										tmatotal,
-										id,
-										causa,
-										time_causa_note,
-										solucao,
-										customer_name,
-										tma_total_atendimento,
-										tma_total_atendimento_tecnico
-									)values (
-										'$tn', 
-										'$title', 
-										'$customer_id', 
-										'$customer_user_id', 
-										'$create_time', 
-										'$closeDate', 
-										'$ticket_priority_id', 
-										'$type_id', 
-										'$ticket_state_id', 
-										'$detail', 
-										'$product', 
-										'$description', 
-										".$queueTime['atendimento'].",
-										".$queueTime['tratamentoTecnico'].", 
-										".$queueTime['binario'].",
-										".$queueTime['other'].",
-										$timeTotal,
-										'$openBy',
-										'$closeBy',
-										'$tmaTotal',
-										'$id',
-										'".$arrCausa['causa']."',
-										'".$timeTotal2."',
-										'$solucao',
-										'$customerData',
-										'$tmaTotalAtendimento',
-										'$tmaTotalTratamentoTecnico'
-									)";
+		 // $ticket = "INSERT INTO crm_otrs_ticket_summary (
+			// 							tn, 
+			// 							title, 
+			// 							customer, 
+			// 							service, 
+			// 							opentime, 
+			// 							closetime, 
+			// 							priority, 
+			// 							type, 
+			// 							status, 
+			// 							detail, 
+			// 							product, 
+			// 							description, 
+			// 							atendimento, 
+			// 							tratamento_tecnico, 
+			// 							binario,
+			// 							other,
+			// 							timetotal,
+			// 							openby,
+			// 							closeby,
+			// 							tmatotal,
+			// 							id,
+			// 							causa,
+			// 							time_causa_note,
+			// 							solucao,
+			// 							customer_name,
+			// 							tma_total_atendimento,
+			// 							tma_total_atendimento_tecnico
+			// 						)values (
+			// 							'$tn', 
+			// 							'$title', 
+			// 							'$customer_id', 
+			// 							'$customer_user_id', 
+			// 							'$create_time', 
+			// 							'$closeDate', 
+			// 							'$ticket_priority_id', 
+			// 							'$type_id', 
+			// 							'$ticket_state_id', 
+			// 							'$detail', 
+			// 							'$product', 
+			// 							'$description', 
+			// 							".$queueTime['atendimento'].",
+			// 							".$queueTime['tratamentoTecnico'].", 
+			// 							".$queueTime['binario'].",
+			// 							".$queueTime['other'].",
+			// 							$timeTotal,
+			// 							'$openBy',
+			// 							'$closeBy',
+			// 							'$tmaTotal',
+			// 							'$id',
+			// 							'".$arrCausa['causa']."',
+			// 							'".$timeTotal2."',
+			// 							'$solucao',
+			// 							'$customerData',
+			// 							'$tmaTotalAtendimento',
+			// 							'$tmaTotalTratamentoTecnico'
+			// 						)";
 		//	echo "<br>";
 			//echo $ticket;
 			//insert($ticket); //inserindo na base dos indicadores

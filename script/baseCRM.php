@@ -397,10 +397,10 @@ function tmaTotal($openDate, $closeDate, $time)
 
 		$timeTotal = ($closeDate - $openDate) / 3600;
 	}
-	else if( !empty($time) ) {
+	if( !empty($time) ) {
 		$timeTotal = $time / 3600;
 	}
-	else{
+	if( empty($time) && empty($openDate) && empty($closeDate) ){
 		echo "opendate".$openDate;
 		echo "closedate".$closeDate;
 		echo 'return bosta ';
@@ -490,7 +490,7 @@ function insert($ticket)
 function delete()
 {
 	include 'PSQL_OSS.php';
-	$sql = "DELETE FROM crm_otrs_ticket_summary";
+	$sql = "DELETE FROM crm_otrs_ticket_summary WHERE opentime < '2015-04-27' ";
 	pg_query($sql);
 }
 	

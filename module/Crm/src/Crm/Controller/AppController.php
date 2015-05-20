@@ -98,6 +98,7 @@ class AppController extends AbstractActionController
             foreach ($result as $item) {
                 $groups[] = $item['cn'][0];
             }
+            // var_dump($groups);
             if ( $preg = preg_grep('/^(OSS|QEP|NOC SN2|CRM Supervisao|CRM Atendimento)$/', $groups)) {
 
                 $_SESSION['groups'] = $groups;
